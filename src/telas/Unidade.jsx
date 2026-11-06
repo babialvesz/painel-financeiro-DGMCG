@@ -4,6 +4,7 @@ import { CONFIG } from '../config';
 import { link, navegar } from '../hooks/useRota';
 import { analisarItensUnidade, descontosFiltrados, situacao, valor } from '../utils/analise';
 import { brl, contrato, nomeCurto, pct, plural, rotuloMes, rotuloPeriodo } from '../utils/formatacao';
+import { mesesComDado } from '../utils/analise';
 import { classeCss } from '../services/descontos';
 import Trilha from '../components/layout/Trilha';
 import Card from '../components/comum/Card';
@@ -25,6 +26,11 @@ export default function Unidade({ aba, query }) {
   if (!u) return <div className="vazio-pagina">Unidade não encontrada. <a href={link('unidades')}>Voltar para unidades</a></div>;
 
   const s = situacao(u, meses, janela);
+  // Período real da unidade: só os meses que ela já enviou (ex.: jan–ago se setembro ainda não chegou)
+  const mesesU = mesesComDado(u, meses);
+  const faltando = filtro.periodo === 'acum' ? meses.filter((m) => m > (mesesU[mesesU.length - 1] || '')) : [];
+  const linhasPeriodo = [['Período', rotuloPeriodo(mesesU.length ? mesesU : meses, filtro.periodo)]];
+  if (faltando.length) linhasPeriodo.push(['Ainda não enviou', faltando.map(rotuloMes).join(', ')]);
   const ver = query.ver === 'mensal' ? 'mensal' : 'itens';
   const ir = (params) => navegar(link('unidade', aba, { ver: query.ver, item: query.item, ...params }));
   const mesesJ = janela.filter((m) => u.v[m]);
@@ -50,7 +56,7 @@ export default function Unidade({ aba, query }) {
       ) : (
         <>
           <div className="grade-stats-unidade cinco">
-            <StatCard rotulo="Receitas" ajuda="Tudo o que entrou para a unidade no período (repasses e outras receitas)." valor={brl(s.rec)} linhas={[['Período', rotuloPeriodo(meses, filtro.periodo)]]} />
+            <StatCard rotulo="Receitas" ajuda="Tudo o que entrou para a unidade no período (repasses e outras receitas)." valor={brl(s.rec)} linhas={linhasPeriodo} />
             <StatCard rotulo="Despesas" ajuda="Todas as despesas da unidade no período, antes das provisões (reservas para férias, 13º e rescisões)." valor={brl(s.desp)} linhas={[['Média por mês', brl(s.desp / Math.max(1, meses.filter((m) => u.v[m]).length))]]} />
             <StatCard rotulo="Resultado" ajuda="Receitas menos despesas. Negativo = déficit (despesas maiores que as receitas). Positivo = superávit (despesas menores que as receitas)."
               cor={s.res < 0 ? 'var(--vermelho)' : 'var(--verde)'} valor={brl(s.res)}

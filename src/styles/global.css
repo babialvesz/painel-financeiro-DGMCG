@@ -549,3 +549,5 @@ a.barras-linha:hover .barras-nome { color: var(--acento); }
 .grade-2.iguais { align-items: stretch; }
 .grade-2.iguais > .card { margin-bottom: 18px; }
 @media (max-width: 900px) { .grade-stats-unidade.tres { grid-template-columns: 1fr; } }
+
+.cartao-aviso { margin: 6px 0 0; font-size: 12px; color: var(--amarelo); }

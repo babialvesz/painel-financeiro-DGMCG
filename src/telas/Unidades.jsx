@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { usePainel } from '../contexto/PainelContexto';
 import { CONFIG } from '../config';
 import { link, navegar } from '../hooks/useRota';
-import { agrupar, deducoesPorUnidade, situacoes, valor } from '../utils/analise';
+import { agrupar, deducoesPorUnidade, mesesComDado, situacoes, valor } from '../utils/analise';
 import { brl, contrato, fraseResultado, nomeCurto, plural, rotuloMes, rotuloPeriodo } from '../utils/formatacao';
 import Card from '../components/comum/Card';
 import Pill from '../components/comum/Pill';
@@ -70,7 +70,7 @@ export default function Unidades({ query }) {
 
       {modo === 'cartoes' ? (
         <div className="grade-unidades">
-          {lista.map((s) => <CartaoUnidade key={s.u.aba} s={s} janela={janela} deducao={deducoes[s.u.aba] || 0} />)}
+          {lista.map((s) => <CartaoUnidade key={s.u.aba} s={s} janela={janela} meses={meses} deducao={deducoes[s.u.aba] || 0} />)}
         </div>
       ) : (
         <Card acoes={<BotaoExportar nome="situacao-unidades" cabecalho={['Unidade', 'Tipo', 'Porte', 'Receitas', 'Despesas', 'Resultado', 'Deduções', 'Com deduções', 'Situação', 'Meses no vermelho']}
@@ -113,8 +113,11 @@ export default function Unidades({ query }) {
   );
 }
 
-function CartaoUnidade({ s, janela, deducao }) {
+function CartaoUnidade({ s, janela, meses, deducao }) {
   const { u } = s;
+  const mesesU = mesesComDado(u, meses);
+  const ultimo = mesesU[mesesU.length - 1];
+  const atrasada = meses.length > 1 && ultimo && ultimo < meses[meses.length - 1];
   const alerta = s.mesesDef >= CONFIG.alertaMeses;
   return (
     <a className={`cartao-unidade ${s.res < 0 ? 'neg' : 'pos'}`} href={link('unidade', u.aba)}>
@@ -137,6 +140,7 @@ function CartaoUnidade({ s, janela, deducao }) {
         </div>
       </div>
       <BarrasResultado valores={janela.map((m) => (u.v[m] ? valor(u, m, 'RES') : null))} />
+      {atrasada && <p className="cartao-aviso">Dados até {rotuloMes(ultimo)} · {rotuloMes(meses[meses.length - 1])} ainda não enviado</p>}
       <div className="cartao-rodape">
         <span className={alerta ? 'texto-alerta' : ''}>{alerta && <Icone nome="alerta" tamanho={14} />} {plural(s.mesesDef, 'mês', 'meses')} no vermelho de {s.mesesJanela}</span>
         <span className="cartao-ver">Ver detalhes <Icone nome="seta" tamanho={14} /></span>
