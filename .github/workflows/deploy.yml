@@ -1,10 +1,18 @@
-# Publica no GitHub Pages a cada push na branch main
-name: Publicar no GitHub Pages
+# A cada push na main: gera o site (confere se o código está ok) e guarda a pasta dist/
+# como arquivo para download (aba Actions > execução > Artifacts > "site").
+# A publicação no GitHub Pages só acontece quando alguém roda manualmente
+# (Actions > Gerar site > Run workflow > marcar "publicar"), e exige o Pages ativado.
+name: Gerar site
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      publicar:
+        description: 'Publicar no GitHub Pages (precisa do Pages ativado)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -26,15 +34,17 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-        env:
-          # Definidos em Settings > Secrets and variables > Actions > Variables
-          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
-          VITE_PLANILHA_ID: ${{ vars.VITE_PLANILHA_ID }}
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist
+      - if: ${{ inputs.publicar }}
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
+    if: ${{ inputs.publicar }}
     needs: build
     runs-on: ubuntu-latest
     environment:
