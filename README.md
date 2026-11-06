@@ -128,3 +128,16 @@ O build **nunca** inclui `dados-local.json` (dados de teste).
 ## Migrar para o servidor
 
 O `dist/` gerado por `npm run build` é estático: roda em Apache, Nginx ou IIS. Para trocar a fonte de dados (ex.: API ou banco da SES), basta criar um serviço com `carregar()` devolvendo o mesmo formato de `src/services/sheets.js` (unidades, itens, valores) e usá-lo em `src/hooks/useCarregamento.js`.
+
+## Para a TI: publicar no servidor da SES
+
+O painel é um site estático. Não usa banco de dados, servidor de aplicação nem guarda nenhum dado: cada pessoa entra com a própria conta Google e o navegador lê a planilha direto do Google.
+
+1. Gerar os arquivos: `npm ci` e depois `npm run build` (Node 20). O resultado fica na pasta `dist/`.
+2. Copiar o conteúdo de `dist/` para uma pasta do servidor web (Apache, Nginx ou IIS).
+3. **O endereço precisa ser HTTPS.** O login do Google não funciona em `http://` (só em `localhost`).
+4. O navegador do usuário precisa acessar `accounts.google.com` e `sheets.googleapis.com`.
+5. Não deixar o `config.json` em cache (ex.: `Cache-Control: no-cache`), para que mudanças nele valham na hora.
+6. Informar à DGMCG o endereço final (ex.: `https://painel.saude.pe.gov.br`). A DGMCG precisa cadastrar esse endereço em "Origens JavaScript autorizadas" no Google Cloud, senão o login dá erro.
+
+Para atualizar o site depois de uma mudança no código: `git pull`, `npm run build` e copiar o `dist/` de novo. Os **dados** não exigem nada da TI: atualizam sozinhos pela planilha.
