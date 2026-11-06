@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.local
+*.log
+# dados reais: nunca subir pro GitHub
+public/dados-local.json
+dist-arquivo
