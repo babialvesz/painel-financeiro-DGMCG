@@ -6,3 +6,6 @@ dist
 # dados reais: nunca subir pro GitHub
 public/dados-local.json
 dist-arquivo
+
+# credenciais do Google: nunca subir
+client_secret*.json
