@@ -42,7 +42,10 @@ export async function entrar() {
         salvar();
         resolve(token);
       },
-      error_callback: (e) => reject(new Error(e?.type === 'popup_closed' ? 'Login cancelado.' : (e?.message || 'Falha no login.'))),
+      error_callback: (e) => reject(new Error(
+        e?.type === 'popup_closed' ? 'A janela do Google foi fechada antes de terminar o login. Se ela mostrou "Acesso bloqueado", este e-mail ainda não está liberado no Google Cloud (usuários de teste) — ou publique o app.'
+          : e?.type === 'popup_failed_to_open' ? 'O navegador bloqueou a janela de login do Google. Permita pop-ups para este site e tente de novo.'
+            : (e?.message || 'Falha no login.'))),
     });
     cliente.requestAccessToken({ prompt: 'select_account' }); // sempre deixa escolher a conta (útil para trocar de usuário)
   });

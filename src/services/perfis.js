@@ -24,6 +24,7 @@ export function areasDoPerfil(texto) {
 /** Lê a aba PERFIS e devolve as áreas liberadas para o e-mail. */
 export async function areasDoUsuario(email, token) {
   if (!CONFIG.planilhaPerfisId) return { areas: todas(), perfil: 'Sem controle de perfis' };
+  if (CONFIG.acessoLivre.includes(email)) return { areas: todas(), perfil: 'Acesso livre' };
   let linhas;
   try {
     linhas = await lerAbaCrua(CONFIG.abaPerfis, token, CONFIG.planilhaPerfisId);

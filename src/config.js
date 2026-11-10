@@ -46,6 +46,8 @@ export const CONFIG = {
   // Vazio = sem controle de perfis.
   planilhaPerfisId: import.meta.env.VITE_PLANILHA_PERFIS_ID || '146YqXQ9X7W7tkdOD06XLf7Pph0RdiAueVaddDV6bfwI',
   abaPerfis: '', // vazio = primeira aba da planilha
+  // E-mails com acesso a todas as áreas sem depender da planilha de acessos (config.json → "acessoLivre")
+  acessoLivre: [],
   perfis: {
     ADMIN: ['financeiro', 'producao'],
     DGMCG: ['financeiro', 'producao'],
@@ -96,5 +98,6 @@ export async function carregarConfigServidor() {
     if (c.planilhaProducaoId) CONFIG.planilhaProducaoId = String(c.planilhaProducaoId).trim();
     if (c.planilhaPerfisId !== undefined) CONFIG.planilhaPerfisId = String(c.planilhaPerfisId).trim();
     if (c.planilhaCadastroId) CONFIG.planilhaCadastroId = String(c.planilhaCadastroId).trim();
+    if (Array.isArray(c.acessoLivre)) CONFIG.acessoLivre = c.acessoLivre.map((e) => String(e).trim().toLowerCase()).filter(Boolean);
   } catch { /* sem config.json: usa os valores do build (.env) */ }
 }
