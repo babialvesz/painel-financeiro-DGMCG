@@ -170,7 +170,7 @@ O `dist/` gerado por `npm run build` é estático: roda em Apache, Nginx ou IIS.
 
 O painel é um site estático. Não usa banco de dados, servidor de aplicação nem guarda nenhum dado: cada pessoa entra com a própria conta Google e o navegador lê a planilha direto do Google.
 
-1. Gerar os arquivos: `npm ci` e depois `npm run build` (Node 20). O resultado fica na pasta `dist/`. (Atalho: a cada atualização, o GitHub já gera essa pasta; ela fica em Actions > última execução > Artifacts > "site".)
+1. Gerar os arquivos: `npm ci` e depois `npm run build` (Node 20). O resultado fica na pasta `dist/`. (Atalho: a cada atualização, o GitHub gera essa pasta e publica o site no GitHub Pages; a pasta fica em Actions > última execução > Artifacts > "site".)
 2. Copiar o conteúdo de `dist/` para uma pasta do servidor web (Apache, Nginx ou IIS).
 3. **O endereço precisa ser HTTPS.** O login do Google não funciona em `http://` (só em `localhost`).
 4. O navegador do usuário precisa acessar `accounts.google.com` e `sheets.googleapis.com`.
