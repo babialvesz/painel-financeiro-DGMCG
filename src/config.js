@@ -10,6 +10,20 @@ export const CONFIG = {
     valores: 'PAINEL_VALORES',
     // lida direto, do jeito que a equipe preenche (sem Apps Script)
     descontos: 'DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO',
+    // cronograma de entrega das prestações de contas (PCF), também lido direto
+    entregas: 'DATAS DE ENTREGA',
+  },
+  // Prazo de entrega da PCF: dia 25 do mês seguinte à competência.
+  // Se cair em fim de semana ou feriado, vale o próximo dia útil.
+  entregas: {
+    diaPrazo: 25,
+    // feriados que caírem no dia 25 (AAAA-MM-DD), ex.: '2026-12-25'
+    feriados: ['2026-12-25', '2027-12-25'],
+  },
+  // Entregas: liga a sigla/nome da aba DATAS DE ENTREGA a uma aba do painel, quando não bate sozinho
+  vinculoEntregas: {
+    HRPSM: 'HRSM - CG 019/2022',
+    HMAGRESTE: 'HMAAGRESTE - CG 001/2025',
   },
   escopo: 'https://www.googleapis.com/auth/spreadsheets.readonly',
   // nº de meses no vermelho para a unidade entrar em "alerta"

@@ -14,6 +14,8 @@ import Abas from '../components/comum/Abas';
 import GraficoMensal from '../components/comum/GraficoMensal';
 import { Anel, Progresso } from '../components/comum/Graficos';
 import Icone from '../components/comum/Icone';
+import { Celula } from './Entregas';
+import { indicadores } from '../utils/entregas';
 import ItensUnidade from './unidade/ItensUnidade';
 import MesAMes from './unidade/MesAMes';
 import DetalheItem from './unidade/DetalheItem';
@@ -26,6 +28,7 @@ export default function Unidade({ aba, query }) {
   if (!u) return <div className="vazio-pagina">Unidade não encontrada. <a href={link('unidades')}>Voltar para unidades</a></div>;
 
   const s = situacao(u, meses, janela);
+  const entrega = modelo.entregas.find((e) => e.aba === u.aba && e.ano === filtro.ano);
   // Período real da unidade: só os meses que ela já enviou (ex.: jan–ago se setembro ainda não chegou)
   const mesesU = mesesComDado(u, meses);
   const faltando = filtro.periodo === 'acum' ? meses.filter((m) => m > (mesesU[mesesU.length - 1] || '')) : [];
@@ -74,6 +77,16 @@ export default function Unidade({ aba, query }) {
               <span className="stat-nota">{alerta ? `Em alerta: ${plural(s.mesesDef, 'mês', 'meses')} no vermelho` : 'meses com prestação de contas'}</span>
             </div>
           </div>
+
+          {entrega && (
+            <Card titulo="Entrega das prestações de contas"
+              acoes={<a className="link-acao" href={link('entrega', entrega.id)}>Ver detalhes <Icone nome="seta" tamanho={14} /></a>}
+              sub={(() => { const i = indicadores(Object.values(entrega.meses)); return i.avaliadas ? `${i.noPrazo} de ${i.avaliadas} entregues no prazo${i.pendentes ? ` · ${plural(i.pendentes, 'competência', 'competências')} ainda não ${i.pendentes === 1 ? 'entregue' : 'entregues'}` : ''}. Passe o mouse em cada mês.` : 'Sem entregas avaliadas ainda.'; })()}>
+              <div className="ent-linha">
+                {Object.keys(entrega.meses).sort().map((c) => <div key={c}><small>{rotuloMes(c)}</small><Celula s={entrega.meses[c]} /></div>)}
+              </div>
+            </Card>
+          )}
 
           <div className="grade-2">
             <Card titulo="Receitas × despesas por mês" sub="Passe o mouse para ver o valor exato.">

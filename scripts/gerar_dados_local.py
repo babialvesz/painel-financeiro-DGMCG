@@ -6,7 +6,7 @@ Serve para desenvolver/testar o painel no computador sem login.
 O arquivo gerado NÃO vai pro GitHub (está no .gitignore).
 
 Uso:
-  python scripts/gerar_dados_local.py caminho/BASE_CONSOLIDADA.csv [AAAA-MM limite] [--descontos caminho/DESCONTOS.csv]
+  python scripts/gerar_dados_local.py caminho/BASE_CONSOLIDADA.csv [AAAA-MM limite] [--descontos caminho/DESCONTOS.csv] [--entregas caminho/DATAS_DE_ENTREGA.csv]
 
 O CSV de descontos é a aba DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO baixada como CSV. Ele entra "cru"
 (como na planilha); o próprio painel interpreta, igual faz ao ler do Google Sheets.
@@ -59,9 +59,11 @@ def competencia(s):
 
 def main():
     args = sys.argv[1:]
-    descontos_csv = None
+    descontos_csv = entregas_csv = None
     if '--descontos' in args:
         k = args.index('--descontos'); descontos_csv = args[k + 1]; del args[k:k + 2]
+    if '--entregas' in args:
+        k = args.index('--entregas'); entregas_csv = args[k + 1]; del args[k:k + 2]
     origem = args[0]
     limite = args[1] if len(args) > 1 else datetime.date.today().strftime('%Y-%m')
     linhas = [l for l in csv.reader(open(origem, encoding='utf-8')) if l]
@@ -111,6 +113,7 @@ def main():
         'itens': [{'c': c, 'n': itens[c]} for c in sorted(itens, key=ordem)],
         'valores': [[a, comp, ch, round(v, 2)] for (a, comp, ch), v in sorted(valores.items())],
         'descontosLinhas': [l for l in csv.reader(open(descontos_csv, encoding='utf-8'))] if descontos_csv else [],
+        'entregasLinhas': [l for l in csv.reader(open(entregas_csv, encoding='utf-8'))] if entregas_csv else [],
     }
     destino = pathlib.Path(__file__).resolve().parent.parent / 'public' / 'dados-local.json'
     destino.parent.mkdir(exist_ok=True)

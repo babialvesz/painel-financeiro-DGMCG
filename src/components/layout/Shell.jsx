@@ -8,6 +8,7 @@ const MENU = [
   { id: 'unidades', href: '#/unidades', nome: 'Unidades', icone: 'unidades', tambem: ['unidade'] },
   { id: 'itens', href: '#/itens', nome: 'Despesas por item', icone: 'itens', tambem: ['item'] },
   { id: 'descontos', href: '#/descontos', nome: 'Descontos', icone: 'desconto' },
+  { id: 'entregas', href: '#/entregas', nome: 'Entregas', icone: 'calendario', tambem: ['entrega'] },
 ];
 
 export default function Shell({ telaAtual, tema, alternarTema, onSair, children }) {

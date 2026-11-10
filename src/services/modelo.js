@@ -13,6 +13,7 @@ const ordemCodigo = (a, b) => {
 
 import { CONFIG } from '../config';
 import { lerLancamentos, vincularUnidades } from './descontos';
+import { lerEntregas, vincularEntregas } from './entregas';
 
 export function montarModelo(bruto) {
   const unidades = bruto.unidades.map((u) => ({ ...u, nome: CONFIG.nomesPadrao[u.aba] || u.nome, v: {} }));
@@ -45,6 +46,8 @@ export function montarModelo(bruto) {
   return {
     descontos: vincularUnidades(lerLancamentos(bruto.descontosLinhas || []), ordenadas, CONFIG.vinculoDescontos),
     descontosErro: bruto.descontosErro || '',
+    entregas: vincularEntregas(lerEntregas(bruto.entregasLinhas || []), ordenadas, CONFIG.vinculoEntregas),
+    entregasErro: bruto.entregasErro || '',
     atualizado: bruto.atualizado,
     unidades: ordenadas,
     porAba,

@@ -103,6 +103,15 @@ O painel lê a aba **DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO** direto da planilha (s
 
 Para testar localmente: `python scripts/gerar_dados_local.py BASE.csv --descontos DESCONTOS.csv`.
 
+## Aba de entregas (DATAS DE ENTREGA)
+
+A tela **Entregas** lê direto a aba `DATAS DE ENTREGA` (cronograma de entrega das PCFs), sem Apps Script. Colunas achadas pelo cabeçalho: `TIPO | OSS | ANO | UNIDADE | Janeiro … dezembro`; cada célula é a data em que a unidade entregou a competência (`N/H` = não se aplica; vazio = não entregou).
+
+- **Prazo:** dia 25 do mês seguinte; se cair em fim de semana ou feriado, vale o próximo dia útil (`CONFIG.entregas`).
+- **Situações:** no prazo · no prazo (dia útil seguinte) · com atraso · não entregou (prazo vencido) · aguardando (dentro do prazo) · data a conferir (entrega registrada antes do fim do mês da competência) · não se aplica.
+- Visão geral (pontualidade, ranking de atrasos, calendário de todas as unidades) e página por unidade; a página financeira de cada unidade mostra a linha do tempo das entregas.
+- Ligação com as unidades do painel pela sigla/nome; exceções em `CONFIG.vinculoEntregas`.
+
 ## Identidade e nomes
 
 - **Logos:** `public/logo-ses.png` (Secretaria da Saúde / Governo de PE) e `public/logo-dgmcg.png` (DGMCG). Título e créditos do rodapé em `src/config.js` → `instituicao`.

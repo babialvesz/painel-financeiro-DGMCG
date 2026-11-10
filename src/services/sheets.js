@@ -35,14 +35,18 @@ async function lerAbaCrua(nome, token) {
 // Devolve os dados no mesmo formato do dados-local.json
 export async function carregar(token) {
   const { unidades, itens, valores } = CONFIG.abas;
-  const [[u, it, v], descontos] = await Promise.all([
+  // as abas de descontos e de entregas não podem derrubar o painel inteiro se falharem
+  const opcional = (nome) => lerAbaCrua(nome, token).then((linhas) => ({ linhas }), (e) => ({ erro: e.message }));
+  const [[u, it, v], descontos, entregas] = await Promise.all([
     lerAbas([unidades, itens, valores], token),
-    // a aba de descontos não pode derrubar o painel inteiro se falhar
-    lerAbaCrua(CONFIG.abas.descontos, token).then((linhas) => ({ linhas }), (e) => ({ erro: e.message })),
+    opcional(CONFIG.abas.descontos),
+    opcional(CONFIG.abas.entregas),
   ]);
   return {
     descontosLinhas: descontos.linhas || [],
     descontosErro: descontos.erro || '',
+    entregasLinhas: entregas.linhas || [],
+    entregasErro: entregas.erro || '',
     atualizado: texto(u[0]?.ATUALIZADO_EM),
     unidades: u.map((l) => ({
       aba: texto(l.ABA), nome: texto(l.UNIDADE) || texto(l.ABA), oss: texto(l.OSS),

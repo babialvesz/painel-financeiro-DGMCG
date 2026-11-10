@@ -10,6 +10,8 @@ import Unidade from './telas/Unidade';
 import Itens from './telas/Itens';
 import Item from './telas/Item';
 import Descontos from './telas/Descontos';
+import Entregas from './telas/Entregas';
+import EntregaUnidade from './telas/EntregaUnidade';
 
 function Tela({ rota }) {
   const [tela, param] = rota.partes;
@@ -19,6 +21,8 @@ function Tela({ rota }) {
     case 'itens': return <Itens />;
     case 'item': return <Item codigo={param} query={rota.query} />;
     case 'descontos': return <Descontos query={rota.query} />;
+    case 'entregas': return <Entregas query={rota.query} />;
+    case 'entrega': return <EntregaUnidade id={param} />;
     default: return <VisaoGeral />;
   }
 }
