@@ -31,8 +31,11 @@ export default function Shell({ area, areas, usuario, menu, telaAtual, filtros, 
             <span>{tema === 'escuro' ? 'Tema claro' : 'Tema escuro'}</span>
           </button>
           {usuario && (
-            <span className="usuario" title={`${usuario.nome || ''}\n${usuario.email}`}>
-              <span className="avatar">{iniciais}</span>
+            <span className="usuario" title={usuario.teste ? 'Versão de teste: abre sem login e mostra todas as áreas' : `${usuario.nome || ''}\n${usuario.email}`}>
+              {usuario.teste ? <span className="avatar avatar-teste">Teste</span>
+                : usuario.foto ? <img className="avatar" src={usuario.foto} alt="" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.replaceWith(Object.assign(document.createElement('span'), { className: 'avatar', textContent: iniciais })); }} />
+                  : <span className="avatar">{iniciais}</span>}
+              {!usuario.teste && <span className="usuario-nome">{(usuario.nome || usuario.email).split(' ')[0]}</span>}
             </span>
           )}
           {onSair && (

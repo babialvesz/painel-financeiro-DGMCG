@@ -21,9 +21,12 @@ export default function Mapa({ pontos, altura = 520, agrupar = true, zoomUnico =
   useEffect(() => {
     if (!ref.current || mapa.current) return undefined;
     const m = L.map(ref.current, { center: CENTRO, zoom: 7, scrollWheelZoom: false });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
-      maxZoom: 18,
+    // Fundo CARTO (dados do OpenStreetMap): funciona também ao abrir o HTML direto do computador,
+    // ao contrário dos servidores do OpenStreetMap, que bloqueiam acesso sem site de origem.
+    const escuro = document.documentElement.getAttribute('data-tema') === 'escuro';
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${escuro ? 'dark_all' : 'rastertiles/voyager'}/{z}/{x}/{y}{r}.png`, {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>',
+      subdomains: 'abcd', maxZoom: 19,
     }).addTo(m);
     // roda do mouse só dá zoom depois de clicar no mapa (não atrapalha a rolagem da página)
     m.on('click', () => m.scrollWheelZoom.enable());

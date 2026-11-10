@@ -664,3 +664,8 @@ a.barras-linha:hover .barras-nome { color: var(--acento); }
 .ficha dt { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 .ficha dd { margin: 2px 0 0; font-size: 14px; font-weight: 600; color: var(--texto); }
 .ficha dd small { display: block; font-size: 12px; font-weight: 500; color: var(--muted); }
+
+.usuario { flex-direction: column; align-items: center; gap: 4px; }
+.usuario-nome { font-size: 11px; color: var(--muted); max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+img.avatar { object-fit: cover; }
+.avatar-teste { width: auto; padding: 0 8px; border-radius: 999px; font-size: 10.5px; background: var(--amarelo-fundo); color: var(--amarelo); }

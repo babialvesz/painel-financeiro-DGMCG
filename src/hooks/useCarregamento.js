@@ -21,7 +21,7 @@ export function useSessao() {
     setEstado('carregando'); setErro('');
     try {
       if (usaLocal()) {
-        setSessao({ usuario: { email: 'teste local', nome: 'Teste local' }, areas: Object.keys(CONFIG.areas), perfil: 'ADMIN (teste)' });
+        setSessao({ usuario: { email: 'versão de teste, sem login', nome: 'Versão de teste', teste: true }, areas: Object.keys(CONFIG.areas), perfil: 'ADMIN (teste)' });
       } else {
         const token = auth.tokenValido() || (await auth.entrar());
         const usuario = await auth.usuario(token);
