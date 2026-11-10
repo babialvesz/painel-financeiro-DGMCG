@@ -3,7 +3,7 @@
 Aplicação web que mostra a situação de **déficit e superávit** das unidades de saúde geridas por OSS, com ranking das situações mais preocupantes, visão mês a mês e ficha detalhada por unidade.
 
 - **Front:** React 18 + Vite + Chart.js (tema escuro/claro)
-- **Dados:** lidos direto da planilha Google (abas `PAINEL_RESULTADO` e `PAINEL_ITENS`), com login Google
+- **Dados:** lidos direto da planilha Google (aba `BASE_CONSOLIDADA`), com login Google
 - **Acesso:** só quem tem permissão de leitura na planilha vê os dados reais. Nenhum dado fica no repositório.
 
 ## Telas
@@ -25,11 +25,8 @@ Filtros globais (ano, período, tipo, porte). Toda tabela tem **Exportar** (CSV 
 ## Como funciona
 
 ```
-BASE_CONSOLIDADA (planilha)
-      │  Apps Script: painel_gerarDados()  (rodar no fim do consolidarBase)
-      ▼
-PAINEL_UNIDADES + PAINEL_ITENS + PAINEL_VALORES (abas leves)
-      │  Google Sheets API + login Google do usuário
+Abas das unidades ──(Apps Script: consolidarBase, acionador diário)──▶ BASE_CONSOLIDADA
+      │  Google Sheets API + login Google do usuário (o próprio navegador aplica as regras abaixo)
       ▼
 App React (GitHub Pages hoje / servidor da SES depois)
 ```
@@ -45,11 +42,7 @@ App React (GitHub Pages hoje / servidor da SES depois)
 ## Configuração
 
 ### 1. Planilha (Apps Script)
-1. Na planilha da `BASE_CONSOLIDADA`: **Extensões → Apps Script**. Apague `PainelWebApp`/`PainelAbas` e o `index` se existirem.
-2. Crie o arquivo `PainelDados` e cole `scripts/apps-script/PainelDados.gs`.
-3. Rode `painel_gerarDados` com `DRY_RUN: true` e confira os totais no log.
-4. Mude para `DRY_RUN: false` e rode de novo. São criadas as abas `PAINEL_UNIDADES`, `PAINEL_ITENS` e `PAINEL_VALORES`.
-5. No fim da função `consolidarBase()`, adicione `painel_gerarDados();` para atualizar junto com o trigger diário.
+O painel lê direto a aba `BASE_CONSOLIDADA`. Basta o `consolidarBase` rodar (acionador diário). O antigo `PainelDados.gs` (abas `PAINEL_*`) não é mais necessário: pode tirar a linha `painel_gerarDados();` do `consolidarBase` e apagar o arquivo e as abas `PAINEL_*`.
 
 ### 2. Google Cloud (login)
 1. Em [console.cloud.google.com](https://console.cloud.google.com), crie um projeto.

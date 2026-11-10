@@ -5,9 +5,8 @@ export const CONFIG = {
   // 'local' = lê public/dados-local.json (só para desenvolvimento)
   fonte: import.meta.env.VITE_FONTE || 'planilha',
   abas: {
-    unidades: 'PAINEL_UNIDADES',
-    itens: 'PAINEL_ITENS',
-    valores: 'PAINEL_VALORES',
+    // aba gerada pelo consolidarBase (lida direto: não precisa mais das abas PAINEL_*)
+    base: 'BASE_CONSOLIDADA',
     // lida direto, do jeito que a equipe preenche (sem Apps Script)
     descontos: 'DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO',
     // cronograma de entrega das prestações de contas (PCF), também lido direto

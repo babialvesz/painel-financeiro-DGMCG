@@ -36,7 +36,7 @@ export default function VisaoGeral() {
       {semValores.length > 0 && (
         <div className="aviso-suave aviso-erro">
           <Icone nome="alerta" tamanho={16} />
-          <span><b>{semValores.length} de {modelo.unidades.length} unidades estão sem valores</b> na aba PAINEL_VALORES da planilha. Provavelmente a última gravação do Apps Script parou no meio. Rode <b>painel_gerarDados</b> de novo (com DRY_RUN = false).</span>
+          <span><b>{semValores.length} de {modelo.unidades.length} unidades estão sem valores do DRE</b> na BASE_CONSOLIDADA. Confira se o consolidarBase rodou até o fim.</span>
         </div>
       )}
       <ComoLer />

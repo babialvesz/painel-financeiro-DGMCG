@@ -1,27 +1,10 @@
 // Leitura das abas do painel via Google Sheets API (com o token do usuário)
 import { CONFIG } from '../config';
+import { lerBase } from './base';
 
 export class ErroSessao extends Error {}
 
-const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
-const texto = (v) => String(v ?? '').trim();
 
-async function lerAbas(nomes, token) {
-  const ranges = nomes.map((n) => `ranges=${encodeURIComponent(n)}`).join('&');
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.planilhaId}/values:batchGet?${ranges}&valueRenderOption=UNFORMATTED_VALUE`;
-  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (r.status === 401) throw new ErroSessao('Sua sessão expirou. Entre novamente.');
-  if (!r.ok) {
-    const m = await explicarErro(r, '');
-    throw new Error(/Confira o nome da aba/.test(m) ? 'Abas do painel não encontradas. Rode o painel_gerarDados() no Apps Script.' : m);
-  }
-  const { valueRanges = [] } = await r.json();
-  return valueRanges.map(({ values = [] }) => {
-    if (!values.length) return [];
-    const cab = values[0].map(norm);
-    return values.slice(1).map((l) => Object.fromEntries(cab.map((c, i) => [c, l[i]])));
-  });
-}
 
 // Lê uma aba "crua" (matriz de valores), sem tratar cabeçalho
 export async function lerAbaCrua(nome, token, planilhaId = CONFIG.planilhaId) {
@@ -63,27 +46,21 @@ export async function carregarProducao(token) {
   };
 }
 
-// Devolve os dados no mesmo formato do dados-local.json
+// Devolve os dados no mesmo formato do dados-local.json.
+// Lê direto a BASE_CONSOLIDADA (gerada pelo consolidarBase); não depende mais das abas PAINEL_*.
 export async function carregar(token) {
-  const { unidades, itens, valores } = CONFIG.abas;
   // as abas de descontos e de entregas não podem derrubar o painel inteiro se falharem
   const opcional = (nome) => lerAbaCrua(nome, token).then((linhas) => ({ linhas }), (e) => ({ erro: e.message }));
-  const [[u, it, v], descontos, entregas] = await Promise.all([
-    lerAbas([unidades, itens, valores], token),
+  const [base, descontos, entregas] = await Promise.all([
+    lerAbaCrua(CONFIG.abas.base, token),
     opcional(CONFIG.abas.descontos),
     opcional(CONFIG.abas.entregas),
   ]);
   return {
+    ...lerBase(base),
     descontosLinhas: descontos.linhas || [],
     descontosErro: descontos.erro || '',
     entregasLinhas: entregas.linhas || [],
     entregasErro: entregas.erro || '',
-    atualizado: texto(u[0]?.ATUALIZADO_EM),
-    unidades: u.map((l) => ({
-      aba: texto(l.ABA), nome: texto(l.UNIDADE) || texto(l.ABA), oss: texto(l.OSS),
-      grupo: texto(l.GRUPO), porte: texto(l.PORTE),
-    })),
-    itens: it.map((l) => ({ c: texto(l.CODIGO), n: texto(l.ITEM) })),
-    valores: v.map((l) => [texto(l.ABA), texto(l.COMPETENCIA), texto(l.CHAVE), Number(l.VALOR) || 0]),
   };
 }
