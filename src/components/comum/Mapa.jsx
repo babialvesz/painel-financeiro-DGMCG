@@ -21,13 +21,23 @@ export default function Mapa({ pontos, altura = 520, agrupar = true, zoomUnico =
   useEffect(() => {
     if (!ref.current || mapa.current) return undefined;
     const m = L.map(ref.current, { center: CENTRO, zoom: 7, scrollWheelZoom: false });
-    // Fundo CARTO (dados do OpenStreetMap): funciona também ao abrir o HTML direto do computador,
-    // ao contrário dos servidores do OpenStreetMap, que bloqueiam acesso sem site de origem.
-    const escuro = document.documentElement.getAttribute('data-tema') === 'escuro';
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${escuro ? 'dark_all' : 'rastertiles/voyager'}/{z}/{x}/{y}{r}.png`, {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>',
-      subdomains: 'abcd', maxZoom: 19,
-    }).addTo(m);
+    // Fundo do mapa: OpenStreetMap no site publicado (http/https). Aberto direto do computador (file://)
+    // o OSM bloqueia, então usa o mapa de ruas da Esri. Se um falhar várias vezes, troca para o outro.
+    const FUNDOS = {
+      osm: ['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>' }],
+      esri: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Mapa &copy; <a href="https://www.esri.com" target="_blank" rel="noopener noreferrer">Esri</a>, OpenStreetMap e colaboradores' }],
+    };
+    let atual = window.location.protocol.startsWith('http') ? 'osm' : 'esri';
+    let erros = 0;
+    let fundo = L.tileLayer(...FUNDOS[atual]).addTo(m);
+    const trocar = () => {
+      if (++erros < 4 || atual === 'troca-feita') return;
+      m.removeLayer(fundo);
+      atual = atual === 'osm' ? 'esri' : 'osm';
+      fundo = L.tileLayer(...FUNDOS[atual]).addTo(m);
+      atual = 'troca-feita';
+    };
+    fundo.on('tileerror', trocar);
     // roda do mouse só dá zoom depois de clicar no mapa (não atrapalha a rolagem da página)
     m.on('click', () => m.scrollWheelZoom.enable());
     m.on('mouseout', () => m.scrollWheelZoom.disable());
