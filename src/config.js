@@ -20,6 +20,10 @@ export const CONFIG = {
     feriados: ['2026-12-25', '2027-12-25'],
   },
   // Entregas: liga a sigla/nome da aba DATAS DE ENTREGA a uma aba do painel, quando não bate sozinho
+  // Apresentação: liga a aba financeira à unidade da produção, quando o contrato e o nome não batem sozinhos
+  vinculoProducao: {
+    'UPAE PETROLINA - CG 010/2025': 'UPAE/UPA Petrolina',
+  },
   vinculoEntregas: {
     HRPSM: 'HRSM - CG 019/2022',
     HMAGRESTE: 'HMAAGRESTE - CG 001/2025',

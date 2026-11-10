@@ -96,6 +96,10 @@ O painel lê a aba **DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO** direto da planilha (s
 
 Para testar localmente: `python scripts/gerar_dados_local.py BASE.csv --descontos DESCONTOS.csv`.
 
+## Modo apresentação (reuniões com as unidades)
+
+Menu **Apresentar** (`#/apresentacao`): pastas por tipo (Hospitais, UPAs, UPAEs, Carretas, Outras) → escolhe a unidade → tela só daquela unidade, sem menu, sem filtros da rede e sem nenhuma comparação, ranking ou link para outras unidades. Abas Financeiro e Produção conforme o perfil de quem apresenta; botões Outra unidade, Tela cheia e Sair. Financeiro e produção são ligados pelo nº do contrato e, se não bater, pelo nome (exceções em `CONFIG.vinculoProducao`).
+
 ## Áreas e perfis
 
 O painel tem uma área por gerência, cada uma lendo a sua planilha:

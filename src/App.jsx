@@ -23,6 +23,7 @@ import UnidadeProducao from './telas/producao/UnidadeProducao';
 import IndicadoresProducao from './telas/producao/IndicadoresProducao';
 import IndicadorProducao from './telas/producao/IndicadorProducao';
 import Icone from './components/comum/Icone';
+import ModoApresentacao from './telas/apresentacao/ModoApresentacao';
 
 const MENUS = {
   financeiro: [
@@ -31,12 +32,14 @@ const MENUS = {
     { id: 'itens', href: '#/itens', nome: 'Despesas por item', icone: 'itens', tambem: ['item'] },
     { id: 'descontos', href: '#/descontos', nome: 'Descontos', icone: 'desconto' },
     { id: 'entregas', href: '#/entregas', nome: 'Entregas', icone: 'calendario', tambem: ['entrega'] },
+    { id: 'apresentacao', href: '#/apresentacao', nome: 'Apresentar', icone: 'apresentacao' },
   ],
   producao: [
     { id: '', href: '#/producao', nome: 'Início', icone: 'mapa' },
     { id: 'metas', href: '#/producao/metas', nome: 'Metas', icone: 'grafico' },
     { id: 'unidades', href: '#/producao/unidades', nome: 'Unidades', icone: 'unidades', tambem: ['unidade'] },
     { id: 'indicadores', href: '#/producao/indicadores', nome: 'Indicadores', icone: 'meta', tambem: ['indicador'] },
+    { id: 'apresentacao', href: '#/apresentacao', nome: 'Apresentar', icone: 'apresentacao' },
   ],
 };
 
@@ -70,17 +73,29 @@ export default function App() {
   const { estado, erro, sessao, entrar, sair, podeSair } = useSessao();
   const rota = useRota();
   const [tema, alternarTema] = useTema();
+  const apresentacao = rota.partes[0] === 'apresentacao';
   const area = rota.partes[0] === 'producao' ? 'producao' : 'financeiro';
-  const permitido = estado === 'pronto' && sessao.areas.includes(area);
-  const dados = useDadosArea(area, permitido, sair);
+  const pode = (a) => estado === 'pronto' && sessao.areas.includes(a);
+  const permitido = apresentacao ? estado === 'pronto' : pode(area);
+  // cada área carrega só quando é usada (no modo apresentação, todas as áreas do perfil)
+  const dadosFin = useDadosArea('financeiro', pode('financeiro') && (apresentacao || area === 'financeiro'), sair);
+  const dadosProd = useDadosArea('producao', pode('producao') && (apresentacao || area === 'producao'), sair);
+  const dados = area === 'producao' ? dadosProd : dadosFin;
 
   // área sem permissão (ou link antigo): vai para a primeira área liberada
   useEffect(() => {
-    if (estado === 'pronto' && !sessao.areas.includes(area)) navegar(CONFIG.areas[sessao.areas[0]].inicio);
-  }, [estado, sessao, area]);
+    if (estado === 'pronto' && !apresentacao && !sessao.areas.includes(area)) navegar(CONFIG.areas[sessao.areas[0]].inicio);
+  }, [estado, sessao, area, apresentacao]);
 
   if (estado !== 'pronto') return <TelaLogin carregando={estado === 'carregando'} erro={erro} onEntrar={entrar} />;
   if (!permitido) return null;
+
+  if (apresentacao) {
+    return (
+      <ModoApresentacao rota={rota} tema={tema} sessao={sessao}
+        fin={pode('financeiro') ? dadosFin : null} prod={pode('producao') ? dadosProd : null} />
+    );
+  }
 
   const props = {
     area, areas: sessao.areas, usuario: sessao.usuario, menu: MENUS[area],
