@@ -30,8 +30,15 @@ export default function VisaoGeral() {
   const piores = [...g.deficit].sort((a, b) => a.res - b.res);
   const grupos = modelo.raizes.map((c) => pesos.linhas[c]).filter(Boolean).sort((a, b) => b.pesoMedio - a.pesoMedio);
 
+  const semValores = modelo.unidades.filter((u) => !Object.keys(u.v).length);
   return (
     <>
+      {semValores.length > 0 && (
+        <div className="aviso-suave aviso-erro">
+          <Icone nome="alerta" tamanho={16} />
+          <span><b>{semValores.length} de {modelo.unidades.length} unidades estão sem valores</b> na aba PAINEL_VALORES da planilha. Provavelmente a última gravação do Apps Script parou no meio. Rode <b>painel_gerarDados</b> de novo (com DRY_RUN = false).</span>
+        </div>
+      )}
       <ComoLer />
 
       <div className="grade-topo">
