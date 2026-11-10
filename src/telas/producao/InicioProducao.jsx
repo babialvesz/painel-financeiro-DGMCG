@@ -74,7 +74,7 @@ export default function InicioProducao({ query }) {
 
       <div className="busca-grande">
         <Icone nome="busca" tamanho={18} />
-        <input type="search" placeholder="Buscar unidade, cidade ou OSS (digite pelo menos 2 letras)" value={busca} onChange={(e) => setBusca(e.target.value)} aria-label="Buscar unidade" />
+        <input type="search" placeholder="Buscar unidade, cidade ou OSS" value={busca} onChange={(e) => setBusca(e.target.value)} aria-label="Buscar unidade" />
       </div>
 
       {achadas ? (

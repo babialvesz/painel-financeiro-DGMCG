@@ -669,3 +669,34 @@ a.barras-linha:hover .barras-nome { color: var(--acento); }
 .usuario-nome { font-size: 11px; color: var(--muted); max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 img.avatar { object-fit: cover; }
 .avatar-teste { width: auto; padding: 0 8px; border-radius: 999px; font-size: 10.5px; background: var(--amarelo-fundo); color: var(--amarelo); }
+
+/* ---------- Celular: topo compacto e barra inferior sem estourar ---------- */
+@media (max-width: 680px) {
+  .barra-topo { gap: 10px; padding: 10px 14px; }
+  .identidade { gap: 8px 12px; }
+  .identidade-texto span { display: none; }
+  .identidade-texto strong { font-size: 15px; }
+  .troca-area { margin-left: 0; width: 100%; }
+  .troca-area a { flex: 1; justify-content: center; padding: 6px 8px; }
+  /* filtros numa linha só, com rolagem lateral */
+  .filtros { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 2px; scrollbar-width: none; }
+  .filtros::-webkit-scrollbar { display: none; }
+  .seletor { flex-shrink: 0; }
+  /* barra inferior: menu ocupa o espaço, tema/usuário/sair encolhem */
+  .lateral { gap: 2px; padding: 4px 4px calc(4px + env(safe-area-inset-bottom)); }
+  .menu { flex: 1; min-width: 0; gap: 0; }
+  .menu a { min-width: 0; font-size: 10px; }
+  .menu a span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+  .lateral-rodape { gap: 0; flex-shrink: 0; }
+  .lateral-rodape button { padding: 6px; }
+  .usuario { padding: 0 2px; }
+  .usuario-nome { display: none; }
+  .avatar { width: 28px; height: 28px; font-size: 11px; }
+  .avatar-teste { width: auto; font-size: 9.5px; padding: 0 6px; }
+  .faixa-resumo b { font-size: 21px; }
+  .faixa-resumo > div { padding: 12px 14px; }
+  .mapa-controles { padding: 10px 12px; }
+  .barra-ferramentas { flex-wrap: wrap; }
+}
+@media (max-width: 680px) { html, body { overflow-x: hidden; } .ajuda-balao { max-width: calc(100vw - 32px); } }
+.barra-ferramentas > div:first-child:not(.chips) { min-width: 0; flex: 1 1 260px; }
