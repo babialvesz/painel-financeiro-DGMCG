@@ -44,7 +44,7 @@ export async function entrar() {
       },
       error_callback: (e) => reject(new Error(e?.type === 'popup_closed' ? 'Login cancelado.' : (e?.message || 'Falha no login.'))),
     });
-    cliente.requestAccessToken();
+    cliente.requestAccessToken({ prompt: 'select_account' }); // sempre deixa escolher a conta (útil para trocar de usuário)
   });
 }
 
