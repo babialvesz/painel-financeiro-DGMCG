@@ -11,9 +11,10 @@ async function lerAbas(nomes, token) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.planilhaId}/values:batchGet?${ranges}&valueRenderOption=UNFORMATTED_VALUE`;
   const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (r.status === 401) throw new ErroSessao('Sua sessão expirou. Entre novamente.');
-  if (r.status === 403) throw new Error('Sua conta Google não tem acesso à planilha. Peça acesso de leitura.');
-  if (r.status === 400 || r.status === 404) throw new Error('Abas do painel não encontradas. Rode o painel_gerarDados() no Apps Script.');
-  if (!r.ok) throw new Error(`Erro ao ler a planilha (${r.status}).`);
+  if (!r.ok) {
+    const m = await explicarErro(r, '');
+    throw new Error(/Confira o nome da aba/.test(m) ? 'Abas do painel não encontradas. Rode o painel_gerarDados() no Apps Script.' : m);
+  }
   const { valueRanges = [] } = await r.json();
   return valueRanges.map(({ values = [] }) => {
     if (!values.length) return [];
@@ -28,9 +29,22 @@ export async function lerAbaCrua(nome, token, planilhaId = CONFIG.planilhaId) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${planilhaId}/values/${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`;
   const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (r.status === 401) throw new ErroSessao('Sua sessão expirou. Entre novamente.');
-  if (r.status === 403) throw new Error(`Sua conta Google não tem acesso à planilha${nome ? ` da aba "${nome}"` : ''}.`);
-  if (!r.ok) throw new Error(`Não foi possível ler a aba "${nome}" (${r.status}).`);
+  if (!r.ok) throw new Error(await explicarErro(r, nome));
   return (await r.json()).values || [];
+}
+
+/** Traduz o erro do Google para uma frase clara (API desativada, sem acesso, aba não encontrada...). */
+async function explicarErro(r, nome) {
+  let msg = '';
+  try { msg = (await r.json())?.error?.message || ''; } catch { /* resposta sem JSON */ }
+  const onde = nome ? `a aba "${nome}"` : 'a planilha';
+  if (/has not been used|is disabled|SERVICE_DISABLED|accessNotConfigured/i.test(msg)) {
+    return 'A Google Sheets API não está ativada no projeto do Google Cloud deste painel (APIs e serviços → Biblioteca → Google Sheets API → Ativar).';
+  }
+  if (r.status === 403) return `Sua conta Google não tem permissão para abrir ${onde}. Peça para compartilharem a planilha com você (leitura).`;
+  if (r.status === 404) return 'Planilha não encontrada. Confira o ID da planilha no config.json.';
+  if (r.status === 400 && /Unable to parse range/i.test(msg)) return `Não encontrei ${onde} na planilha. Confira o nome da aba.`;
+  return `Não foi possível ler ${onde} (${r.status})${msg ? `: ${msg}` : ''}.`;
 }
 
 /** Planilha de produção (GMCG): aba Dados_Tratados + cadastro das unidades (mapa), que é opcional. */

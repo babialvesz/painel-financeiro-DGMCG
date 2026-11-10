@@ -29,7 +29,7 @@ export async function areasDoUsuario(email, token) {
     linhas = await lerAbaCrua(CONFIG.abaPerfis, token, CONFIG.planilhaPerfisId);
   } catch (e) {
     if (e instanceof ErroSessao) throw e;
-    throw new Error('Não foi possível ler a lista de perfis do painel. Peça à CGICG para liberar seu acesso.');
+    throw new Error(`Não foi possível ler a planilha de acessos do painel. ${e.message}`);
   }
   const iCab = linhas.findIndex((l) => l.some((c) => norm(c).replace(/[^A-Z]/g, '') === 'EMAIL'));
   if (iCab < 0) throw new Error('A planilha de acessos precisa da coluna "email".');
