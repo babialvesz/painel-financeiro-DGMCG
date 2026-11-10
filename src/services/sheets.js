@@ -23,13 +23,19 @@ async function lerAbas(nomes, token) {
 }
 
 // Lê uma aba "crua" (matriz de valores), sem tratar cabeçalho
-async function lerAbaCrua(nome, token) {
+export async function lerAbaCrua(nome, token, planilhaId = CONFIG.planilhaId) {
   const range = `'${nome.replace(/'/g, "''")}'!A1:Z`;
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.planilhaId}/values/${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${planilhaId}/values/${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`;
   const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (r.status === 401) throw new ErroSessao('Sua sessão expirou. Entre novamente.');
+  if (r.status === 403) throw new Error(`Sua conta Google não tem acesso à planilha da aba "${nome}".`);
   if (!r.ok) throw new Error(`Não foi possível ler a aba "${nome}" (${r.status}).`);
   return (await r.json()).values || [];
+}
+
+/** Planilha de produção (GMCG): aba Dados_Tratados crua. */
+export async function carregarProducao(token) {
+  return { linhas: await lerAbaCrua(CONFIG.abaProducao, token, CONFIG.planilhaProducaoId) };
 }
 
 // Devolve os dados no mesmo formato do dados-local.json

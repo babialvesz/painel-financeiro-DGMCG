@@ -1,29 +1,21 @@
-import { usePainel } from '../../contexto/PainelContexto';
 import { CONFIG } from '../../config';
-import { rotuloMes } from '../../utils/formatacao';
 import Icone from '../comum/Icone';
 
-const MENU = [
-  { id: '', href: '#/', nome: 'Visão geral', icone: 'inicio' },
-  { id: 'unidades', href: '#/unidades', nome: 'Unidades', icone: 'unidades', tambem: ['unidade'] },
-  { id: 'itens', href: '#/itens', nome: 'Despesas por item', icone: 'itens', tambem: ['item'] },
-  { id: 'descontos', href: '#/descontos', nome: 'Descontos', icone: 'desconto' },
-  { id: 'entregas', href: '#/entregas', nome: 'Entregas', icone: 'calendario', tambem: ['entrega'] },
-];
-
-export default function Shell({ telaAtual, tema, alternarTema, onSair, children }) {
-  const { modelo, anos, filtro, alterarFiltro, mesesAno } = usePainel();
-  const grupos = [...new Set(modelo.unidades.map((u) => u.grupo).filter(Boolean))].sort();
-  const portes = [...new Set(modelo.unidades.filter((u) => !filtro.grupo || u.grupo === filtro.grupo).map((u) => u.porte).filter(Boolean))].sort();
-
+/**
+ * Moldura do painel: menu lateral, topo com identidade, troca de área e filtros, rodapé.
+ * menu = [{ id, href, nome, icone, tambem? }]
+ */
+export default function Shell({ area, areas, usuario, menu, telaAtual, filtros, rodape, tema, alternarTema, onSair, children }) {
+  const info = CONFIG.areas[area];
+  const iniciais = (usuario?.nome || usuario?.email || '?').split(/[\s.@]+/).filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
   return (
     <div className="app">
       <aside className="lateral">
-        <a className="logo" href="#/" aria-label="Início">
+        <a className="logo" href={info.inicio} aria-label="Início">
           <span className="logo-icone" aria-hidden="true"><i /><i /><i /></span>
         </a>
         <nav className="menu" aria-label="Seções">
-          {MENU.map((m) => {
+          {menu.map((m) => {
             const ativo = telaAtual === m.id || m.tambem?.includes(telaAtual);
             return (
               <a key={m.id} href={m.href} className={ativo ? 'ativo' : ''} aria-current={ativo ? 'page' : undefined} title={m.nome}>
@@ -38,6 +30,11 @@ export default function Shell({ telaAtual, tema, alternarTema, onSair, children 
             <Icone nome={tema === 'escuro' ? 'sol' : 'lua'} tamanho={19} />
             <span>{tema === 'escuro' ? 'Tema claro' : 'Tema escuro'}</span>
           </button>
+          {usuario && (
+            <span className="usuario" title={`${usuario.nome || ''}\n${usuario.email}`}>
+              <span className="avatar">{iniciais}</span>
+            </span>
+          )}
           {onSair && (
             <button onClick={onSair} title="Sair">
               <Icone nome="sair" tamanho={19} />
@@ -56,24 +53,24 @@ export default function Shell({ telaAtual, tema, alternarTema, onSair, children 
               ))}
             </div>
             <div className="identidade-texto">
-              <strong>{CONFIG.instituicao.titulo}</strong>
-              <span>Unidades de saúde geridas por Organizações Sociais de Saúde (OSS)</span>
+              <strong>{info.titulo}</strong>
+              <span>Unidades de saúde geridas por Organizações Sociais de Saúde (OSS) · {info.gerencia}</span>
             </div>
+            {areas.length > 1 && (
+              <nav className="troca-area" aria-label="Área do painel">
+                {areas.map((a) => (
+                  <a key={a} href={CONFIG.areas[a].inicio} className={a === area ? 'ativo' : ''} aria-current={a === area ? 'page' : undefined}>
+                    {CONFIG.areas[a].nome}<small>{CONFIG.areas[a].gerencia}</small>
+                  </a>
+                ))}
+              </nav>
+            )}
           </div>
-          <div className="filtros">
-            <Seletor rotulo="Ano" valor={filtro.ano} onChange={(v) => alterarFiltro({ ano: v })} opcoes={anos.map((a) => [a, a])} />
-            <Seletor rotulo="Período" valor={filtro.periodo} onChange={(v) => alterarFiltro({ periodo: v })}
-              opcoes={[['acum', 'Ano todo (acumulado)'], ...mesesAno.map((m) => [m, `Só ${rotuloMes(m)}`])]} />
-            <Seletor rotulo="Tipo" valor={filtro.grupo} onChange={(v) => alterarFiltro({ grupo: v })}
-              opcoes={[['', 'Todos'], ...grupos.map((g) => [g, g === CONFIG.semClassificacao ? 'Outros' : g])]} />
-            <Seletor rotulo="Porte" valor={filtro.porte} onChange={(v) => alterarFiltro({ porte: v })}
-              opcoes={[['', 'Todos'], ...portes.map((p) => [p, p])]} />
-          </div>
+          {filtros && <div className="filtros">{filtros}</div>}
         </header>
         <main className="pagina">{children}</main>
         <footer className="rodape">
-          Valores antes das provisões · Fonte: Acompanhamento financeiro (em análise pela Prestação de Contas, sujeito a alterações)
-          {modelo.atualizado && ` · Atualizado em ${modelo.atualizado}`}
+          {rodape}
           <span className="creditos">{CONFIG.instituicao.creditos}</span>
         </footer>
       </div>
@@ -81,7 +78,7 @@ export default function Shell({ telaAtual, tema, alternarTema, onSair, children 
   );
 }
 
-function Seletor({ rotulo, valor, onChange, opcoes }) {
+export function Seletor({ rotulo, valor, onChange, opcoes }) {
   return (
     <label className="seletor">
       <span>{rotulo}</span>

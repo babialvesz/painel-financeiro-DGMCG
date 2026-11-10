@@ -48,8 +48,22 @@ export async function entrar() {
   });
 }
 
+/** E-mail e nome de quem entrou (precisa do escopo "email profile"). */
+export async function usuario(tk) {
+  try {
+    const s = JSON.parse(sessionStorage.getItem(CHAVE + '_usuario') || 'null');
+    if (s?.email) return s;
+  } catch { /* sem storage */ }
+  const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${tk}` } });
+  if (!r.ok) throw new Error('Não foi possível identificar sua conta Google. Entre novamente.');
+  const j = await r.json();
+  const u = { email: String(j.email || '').toLowerCase(), nome: j.name || j.given_name || '', foto: j.picture || '' };
+  try { sessionStorage.setItem(CHAVE + '_usuario', JSON.stringify(u)); } catch { /* sem storage */ }
+  return u;
+}
+
 export function sair() {
   if (token && window.google?.accounts?.oauth2) window.google.accounts.oauth2.revoke(token, () => {});
   token = null; expiraEm = 0;
-  try { sessionStorage.removeItem(CHAVE); } catch { /* sem storage */ }
+  try { sessionStorage.removeItem(CHAVE); sessionStorage.removeItem(CHAVE + '_usuario'); } catch { /* sem storage */ }
 }

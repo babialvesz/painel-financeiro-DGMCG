@@ -25,7 +25,27 @@ export const CONFIG = {
     HRPSM: 'HRSM - CG 019/2022',
     HMAGRESTE: 'HMAAGRESTE - CG 001/2025',
   },
-  escopo: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+  // leitura das planilhas + e-mail de quem entrou (para o perfil)
+  escopo: 'https://www.googleapis.com/auth/spreadsheets.readonly openid email profile',
+  // Áreas do painel (uma por gerência). Cada uma lê a sua própria planilha.
+  areas: {
+    financeiro: { nome: 'Financeiro', gerencia: 'GGCCG', titulo: 'Acompanhamento Financeiro das Unidades', inicio: '#/' },
+    producao: { nome: 'Produção', gerencia: 'GMCG', titulo: 'Produção das Unidades', inicio: '#/producao' },
+  },
+  // Planilha de produção (GMCG) e aba lida
+  planilhaProducaoId: import.meta.env.VITE_PLANILHA_PRODUCAO_ID || '1T9mZMRHQ1Lt1bZZuuZNSGxd89CBjC1g7eK2q0It5HKo',
+  abaProducao: 'Dados_Tratados',
+  // Perfis: planilha com a aba PERFIS (E-MAIL | PERFIL | NOME).
+  // PERFIL = GGCCG (financeiro), GMCG (produção) ou ADMIN (tudo). Vazio = sem controle de perfis.
+  planilhaPerfisId: import.meta.env.VITE_PLANILHA_PERFIS_ID || '',
+  abaPerfis: 'PERFIS',
+  perfis: {
+    ADMIN: ['financeiro', 'producao'],
+    DGMCG: ['financeiro', 'producao'],
+    CGICG: ['financeiro', 'producao'],
+    GGCCG: ['financeiro'],
+    GMCG: ['producao'],
+  },
   // nº de meses no vermelho para a unidade entrar em "alerta"
   alertaMeses: 3,
   // grupo/porte que não entram na comparação com unidades parecidas
@@ -66,5 +86,7 @@ export async function carregarConfigServidor() {
     const c = await r.json();
     if (c.googleClientId) CONFIG.clientId = String(c.googleClientId).trim();
     if (c.planilhaId) CONFIG.planilhaId = String(c.planilhaId).trim();
+    if (c.planilhaProducaoId) CONFIG.planilhaProducaoId = String(c.planilhaProducaoId).trim();
+    if (c.planilhaPerfisId !== undefined) CONFIG.planilhaPerfisId = String(c.planilhaPerfisId).trim();
   } catch { /* sem config.json: usa os valores do build (.env) */ }
 }

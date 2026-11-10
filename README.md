@@ -103,6 +103,31 @@ O painel lê a aba **DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO** direto da planilha (s
 
 Para testar localmente: `python scripts/gerar_dados_local.py BASE.csv --descontos DESCONTOS.csv`.
 
+## Áreas e perfis
+
+O painel tem uma área por gerência, cada uma lendo a sua planilha:
+
+| Área | Gerência | Planilha (config.json) |
+|---|---|---|
+| Financeiro (`#/`) | GGCCG | `planilhaId` |
+| Produção (`#/producao`) | GMCG | `planilhaProducaoId` (aba `Dados_Tratados`) |
+
+**Perfis:** em `planilhaPerfisId` vai o ID de uma planilha com a aba `PERFIS`:
+
+| E-MAIL | PERFIL | NOME |
+|---|---|---|
+| fulana@gmail.com | GGCCG | Fulana |
+| beltrano@gmail.com | GMCG | Beltrano |
+| cgicg@exemplo.com | ADMIN | Equipe CGICG |
+
+`GGCCG` vê o Financeiro, `GMCG` vê a Produção, `ADMIN`/`DGMCG`/`CGICG` veem tudo (mais de um perfil: separe por vírgula). Quem não está na lista não entra. A planilha de perfis precisa estar compartilhada (leitura) com todos os e-mails da lista. Com `planilhaPerfisId` vazio, não há controle de perfis.
+
+O perfil organiza o que cada pessoa vê; quem protege os **dados** continua sendo o compartilhamento de cada planilha no Google.
+
+## Produção (GMCG)
+
+Lê a aba `Dados_Tratados` (`Ano | Tipo | MACRO | GERES | OSS | Unidade | C.G. | Indicador | Mês | Meta | Produção | % | Status_Meta`). Meta cumprida = produção ≥ meta do mês (recalculado; a coluna Status_Meta não é usada). Telas: visão geral, unidades, unidade (indicadores e mês a mês) e indicadores (ranking das unidades). Cada unidade é avaliada pelas próprias metas; nada é somado entre unidades.
+
 ## Aba de entregas (DATAS DE ENTREGA)
 
 A tela **Entregas** lê direto a aba `DATAS DE ENTREGA` (cronograma de entrega das PCFs), sem Apps Script. Colunas achadas pelo cabeçalho: `TIPO | OSS | ANO | UNIDADE | Janeiro … dezembro`; cada célula é a data em que a unidade entregou a competência (`N/H` = não se aplica; vazio = não entregou).

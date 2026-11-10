@@ -5,8 +5,8 @@ export default function TelaLogin({ carregando, erro, onEntrar }) {
     <div className="login">
       <div className="login-caixa">
         <span className="logo-icone grande" aria-hidden="true"><i /><i /><i /></span>
-        <h1>Acompanhamento Financeiro</h1>
-        <p>Situação financeira das unidades de saúde geridas por OSS: receitas, despesas por item e resultado.</p>
+        <h1>Painel das Unidades OSS</h1>
+        <p>Acompanhamento das unidades de saúde geridas por OSS: financeiro (GGCCG) e produção (GMCG). Cada pessoa vê as áreas do seu perfil.</p>
         {carregando ? (
           <p className="login-status"><span className="girando" aria-hidden="true" /> Carregando dados…</p>
         ) : googleConfigurado() ? (
@@ -15,7 +15,7 @@ export default function TelaLogin({ carregando, erro, onEntrar }) {
           <p className="login-aviso">Login com Google ainda não configurado neste ambiente.</p>
         )}
         {erro && <p className="login-erro" role="alert">{erro}</p>}
-        {googleConfigurado() && !carregando && <p className="login-nota">Só quem tem acesso à planilha consegue ver os dados.</p>}
+        {googleConfigurado() && !carregando && <p className="login-nota">Entre com o e-mail cadastrado no painel. Os dados só aparecem para quem tem acesso às planilhas.</p>}
       </div>
     </div>
   );
