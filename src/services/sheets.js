@@ -24,18 +24,29 @@ async function lerAbas(nomes, token) {
 
 // Lê uma aba "crua" (matriz de valores), sem tratar cabeçalho
 export async function lerAbaCrua(nome, token, planilhaId = CONFIG.planilhaId) {
-  const range = `'${nome.replace(/'/g, "''")}'!A1:Z`;
+  const range = nome ? `'${nome.replace(/'/g, "''")}'!A1:Z` : 'A1:Z'; // sem nome = primeira aba
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${planilhaId}/values/${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`;
   const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (r.status === 401) throw new ErroSessao('Sua sessão expirou. Entre novamente.');
-  if (r.status === 403) throw new Error(`Sua conta Google não tem acesso à planilha da aba "${nome}".`);
+  if (r.status === 403) throw new Error(`Sua conta Google não tem acesso à planilha${nome ? ` da aba "${nome}"` : ''}.`);
   if (!r.ok) throw new Error(`Não foi possível ler a aba "${nome}" (${r.status}).`);
   return (await r.json()).values || [];
 }
 
-/** Planilha de produção (GMCG): aba Dados_Tratados crua. */
+/** Planilha de produção (GMCG): aba Dados_Tratados + cadastro das unidades (mapa), que é opcional. */
 export async function carregarProducao(token) {
-  return { linhas: await lerAbaCrua(CONFIG.abaProducao, token, CONFIG.planilhaProducaoId) };
+  const opcional = (aba) => lerAbaCrua(aba, token, CONFIG.planilhaCadastroId).catch((e) => ({ erro: e.message }));
+  const [linhas, cad, oss] = await Promise.all([
+    lerAbaCrua(CONFIG.abaProducao, token, CONFIG.planilhaProducaoId),
+    CONFIG.planilhaCadastroId ? opcional(CONFIG.abaCadastro) : [],
+    CONFIG.planilhaCadastroId ? opcional('OSS (legenda)') : [],
+  ]);
+  return {
+    linhas,
+    cadastroLinhas: Array.isArray(cad) ? cad : [],
+    ossLinhas: Array.isArray(oss) ? oss : [],
+    cadastroErro: cad?.erro || '',
+  };
 }
 
 // Devolve os dados no mesmo formato do dados-local.json

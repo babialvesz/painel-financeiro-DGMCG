@@ -4,6 +4,8 @@
 // Uma linha = meta e produção de UM indicador, de UMA unidade, em UM mês.
 // A situação é recalculada aqui (produção ≥ meta = cumprida), sem depender da coluna Status_Meta.
 
+import { acharCadastro } from './cadastro';
+
 const MESES = ['JANEIRO', 'FEVEREIRO', 'MARCO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
 const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
 const chave = (s) => norm(s).replace(/[^A-Z0-9]/g, '');
@@ -40,7 +42,7 @@ export const SITUACOES_META = {
 const TIPOS = { HOSPITAL: 'Hospital', UPA: 'UPA', UPAE: 'UPAE', CARRETA: 'Carreta' };
 export const nomeTipo = (t) => TIPOS[norm(t)] || t || 'Outros';
 
-export function montarProducao(linhas) {
+export function montarProducao(linhas, cadastro = null, cadastroErro = '') {
   const iCab = linhas.findIndex((l) => l.some((c) => chave(c) === 'INDICADOR') && l.some((c) => chave(c) === 'PRODUCAO'));
   if (iCab < 0) return { registros: [], unidades: [], porId: {}, indicadores: [], anos: [] };
   const cab = linhas[iCab].map(chave);
@@ -79,12 +81,17 @@ export function montarProducao(linhas) {
   });
 
   const unidades = Object.values(porId).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  unidades.forEach((u) => { u.cad = acharCadastro(cadastro, u.nome); u.cidade = u.cad?.cidade || ''; });
+  // OSS: siglas das unidades com produção + razão social da legenda
+  const oss = [...new Set(unidades.map((u) => u.oss).filter(Boolean))].sort()
+    .map((sigla) => ({ sigla, razao: cadastro?.oss?.[sigla]?.razao || '', unidades: unidades.filter((u) => u.oss === sigla) }));
   // anos e meses que têm alguma produção informada
   const comMeta = registros.filter((r) => r.prod !== null);
   const anos = [...new Set(comMeta.map((r) => r.ano))].sort().reverse();
   const meses = [...new Set(comMeta.map((r) => r.comp))].sort();
   return {
-    registros, unidades, porId, anos, meses, divergentes,
+    registros, unidades, porId, anos, meses, divergentes, oss, cadastroErro,
+    temMapa: unidades.some((u) => u.cad?.lat !== undefined && u.cad?.lat !== null),
     indicadores: Object.keys(freqInd).sort((a, b) => freqInd[b] - freqInd[a] || a.localeCompare(b, 'pt-BR')),
     tipos: [...new Set(unidades.map((u) => u.tipo))].sort(),
   };

@@ -1,9 +1,10 @@
 // Perfis de acesso: quem vê qual área (financeiro = GGCCG, produção = GMCG, admin = tudo)
 //
-// Aba PERFIS (na planilha configurada em CONFIG.planilhaPerfisId):
-//   E-MAIL | PERFIL | NOME
-//   fulana@gmail.com | GGCCG | Fulana
-//   beltrano@gmail.com | GMCG, GGCCG | Beltrano    (mais de um perfil: separe por vírgula)
+// Planilha "controle de acesso aos paineis" (CONFIG.planilhaPerfisId), primeira aba:
+//   nome | email | acessos permitidos
+//   Fulana | fulana@gmail.com | GGCCG
+//   Beltrano | beltrano@gmail.com | GMCG, GGCCG     (mais de um: separe por vírgula)
+// A coluna de acessos também pode se chamar PERFIL. Outras colunas são ignoradas.
 //
 // Importante: o perfil só organiza o que cada pessoa vê. Quem protege os DADOS é a permissão
 // de cada planilha no Google: sem acesso à planilha, a área não carrega para aquela pessoa.
@@ -31,9 +32,11 @@ export async function areasDoUsuario(email, token) {
     throw new Error('Não foi possível ler a lista de perfis do painel. Peça à CGICG para liberar seu acesso.');
   }
   const iCab = linhas.findIndex((l) => l.some((c) => norm(c).replace(/[^A-Z]/g, '') === 'EMAIL'));
-  if (iCab < 0) throw new Error('A aba PERFIS precisa das colunas E-MAIL e PERFIL.');
+  if (iCab < 0) throw new Error('A planilha de acessos precisa da coluna "email".');
   const cab = linhas[iCab].map((c) => norm(c).replace(/[^A-Z]/g, ''));
-  const iE = cab.indexOf('EMAIL'), iP = cab.indexOf('PERFIL');
+  const iE = cab.indexOf('EMAIL');
+  const iP = cab.findIndex((c) => c === 'PERFIL' || c.startsWith('ACESSO'));
+  if (iP < 0) throw new Error('A planilha de acessos precisa da coluna "acessos permitidos".');
   const linha = linhas.slice(iCab + 1).find((l) => String(l[iE] ?? '').trim().toLowerCase() === email);
   if (!linha) throw new Error(`O e-mail ${email} não está cadastrado no painel. Peça acesso à CGICG.`);
   const areas = areasDoPerfil(linha[iP]);

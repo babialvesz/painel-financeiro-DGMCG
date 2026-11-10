@@ -35,10 +35,14 @@ export const CONFIG = {
   // Planilha de produção (GMCG) e aba lida
   planilhaProducaoId: import.meta.env.VITE_PLANILHA_PRODUCAO_ID || '1T9mZMRHQ1Lt1bZZuuZNSGxd89CBjC1g7eK2q0It5HKo',
   abaProducao: 'Dados_Tratados',
-  // Perfis: planilha com a aba PERFIS (E-MAIL | PERFIL | NOME).
-  // PERFIL = GGCCG (financeiro), GMCG (produção) ou ADMIN (tudo). Vazio = sem controle de perfis.
-  planilhaPerfisId: import.meta.env.VITE_PLANILHA_PERFIS_ID || '',
-  abaPerfis: 'PERFIS',
+  // Cadastro das unidades (cidade, endereço, CNES, latitude/longitude) — BD Unidades OSS, aba Unidades
+  planilhaCadastroId: import.meta.env.VITE_PLANILHA_CADASTRO_ID || '1h6yEUJCEzHAtWVw1IHGtND5g79Qmv3RW7fBL-qdmXmY',
+  abaCadastro: 'Unidades',
+  // Perfis: planilha "controle de acesso aos paineis" (colunas nome | email | acessos permitidos).
+  // acessos = GGCCG (financeiro), GMCG (produção), ADMIN (tudo); vários separados por vírgula.
+  // Vazio = sem controle de perfis.
+  planilhaPerfisId: import.meta.env.VITE_PLANILHA_PERFIS_ID || '146YqXQ9X7W7tkdOD06XLf7Pph0RdiAueVaddDV6bfwI',
+  abaPerfis: '', // vazio = primeira aba da planilha
   perfis: {
     ADMIN: ['financeiro', 'producao'],
     DGMCG: ['financeiro', 'producao'],
@@ -88,5 +92,6 @@ export async function carregarConfigServidor() {
     if (c.planilhaId) CONFIG.planilhaId = String(c.planilhaId).trim();
     if (c.planilhaProducaoId) CONFIG.planilhaProducaoId = String(c.planilhaProducaoId).trim();
     if (c.planilhaPerfisId !== undefined) CONFIG.planilhaPerfisId = String(c.planilhaPerfisId).trim();
+    if (c.planilhaCadastroId) CONFIG.planilhaCadastroId = String(c.planilhaCadastroId).trim();
   } catch { /* sem config.json: usa os valores do build (.env) */ }
 }

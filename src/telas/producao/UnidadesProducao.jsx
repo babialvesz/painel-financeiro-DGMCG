@@ -5,6 +5,7 @@ import { corPct, inteiro, resumoUnidade, tomPct } from '../../utils/producao';
 import { pct, rotuloPeriodo } from '../../utils/formatacao';
 import { Anel, Progresso } from '../../components/comum/Graficos';
 import Icone from '../../components/comum/Icone';
+import Trilha from '../../components/layout/Trilha';
 
 const ORDENS = {
   pior: { nome: 'Menos metas cumpridas primeiro', f: (a, b) => a.pctMetas - b.pctMetas },
@@ -13,7 +14,10 @@ const ORDENS = {
 };
 
 export default function UnidadesProducao({ query }) {
-  const { unidades, comps, filtro } = useProducao();
+  const { modelo, unidades: todas, comps, filtro } = useProducao();
+  const ossSel = query.oss || '';
+  const unidades = ossSel ? todas.filter((u) => u.oss === ossSel) : todas;
+  const infoOss = modelo.oss.find((o) => o.sigla === ossSel);
   const [busca, setBusca] = useState('');
   const [ordem, setOrdem] = useState('pior');
   const resumos = useMemo(() => unidades.map((u) => resumoUnidade(u, comps)).filter((r) => r.avaliados), [unidades, comps]);
@@ -29,16 +33,17 @@ export default function UnidadesProducao({ query }) {
 
   return (
     <>
+      {ossSel && <Trilha passos={[{ nome: 'OSS', href: link('producao', { ver: 'oss' }) }, { nome: ossSel }]} />}
       <div className="titulo-pagina">
         <div>
-          <h1>Unidades</h1>
-          <p className="sub">{rotuloPeriodo(comps, filtro.periodo)} · percentual das metas mensais cumpridas por cada unidade · clique para ver os indicadores</p>
+          <h1>{ossSel ? `Unidades geridas por ${ossSel}` : 'Unidades'}</h1>
+          <p className="sub">{infoOss?.razao ? `${infoOss.razao} · ` : ''}{rotuloPeriodo(comps, filtro.periodo)} · percentual das metas mensais cumpridas por cada unidade · clique para ver os indicadores{ossSel && <> · <a href={link('producao', 'unidades')}>ver todas as OSS</a></>}</p>
         </div>
       </div>
       <div className="barra-ferramentas">
         <div className="chips" role="group" aria-label="Filtrar">
           {[['', 'Todas', resumos.length], ['todas', 'Cumpriram todas', grupos.todas.length], ['parcial', 'Entre 70% e 99%', grupos.parcial.length], ['abaixo', 'Abaixo de 70%', grupos.abaixo.length]].map(([id, nome, n]) => (
-            <button key={id} className={`chip ${f === id ? 'ativo' : ''}`} onClick={() => navegar(link('producao', 'unidades', { f: id }))}>{nome} <b>{n}</b></button>
+            <button key={id} className={`chip ${f === id ? 'ativo' : ''}`} onClick={() => navegar(link('producao', 'unidades', { f: id, oss: ossSel }))}>{nome} <b>{n}</b></button>
           ))}
         </div>
         <div className="ferramentas-direita">
@@ -55,7 +60,7 @@ export default function UnidadesProducao({ query }) {
             <div className="cartao-topo">
               <div>
                 <h3>{r.u.nome}</h3>
-                <span className="meta">{[r.u.tipo, r.u.oss, r.u.geres && `${r.u.geres} GERES`].filter(Boolean).join(' · ')}</span>
+                <span className="meta">{[r.u.tipo, r.u.cidade, r.u.oss].filter(Boolean).join(' · ')}</span>
               </div>
               <Anel valor={r.pctMetas} tamanho={58} espessura={6} cor={corPct(r.pctMetas === 1 ? 1 : r.pctMetas >= 0.7 ? 0.9 : 0)}>
                 <b className="anel-pct">{pct(r.pctMetas, 0)}</b>

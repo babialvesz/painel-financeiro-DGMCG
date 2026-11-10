@@ -17,6 +17,7 @@ import Descontos from './telas/Descontos';
 import Entregas from './telas/Entregas';
 import EntregaUnidade from './telas/EntregaUnidade';
 import VisaoProducao from './telas/producao/VisaoProducao';
+import InicioProducao from './telas/producao/InicioProducao';
 import UnidadesProducao from './telas/producao/UnidadesProducao';
 import UnidadeProducao from './telas/producao/UnidadeProducao';
 import IndicadoresProducao from './telas/producao/IndicadoresProducao';
@@ -32,7 +33,8 @@ const MENUS = {
     { id: 'entregas', href: '#/entregas', nome: 'Entregas', icone: 'calendario', tambem: ['entrega'] },
   ],
   producao: [
-    { id: '', href: '#/producao', nome: 'Visão geral', icone: 'inicio' },
+    { id: '', href: '#/producao', nome: 'Início', icone: 'mapa' },
+    { id: 'metas', href: '#/producao/metas', nome: 'Metas', icone: 'grafico' },
     { id: 'unidades', href: '#/producao/unidades', nome: 'Unidades', icone: 'unidades', tambem: ['unidade'] },
     { id: 'indicadores', href: '#/producao/indicadores', nome: 'Indicadores', icone: 'meta', tambem: ['indicador'] },
   ],
@@ -59,7 +61,8 @@ function TelaProducao({ rota }) {
     case 'unidade': return <UnidadeProducao id={param} query={rota.query} />;
     case 'indicadores': return <IndicadoresProducao />;
     case 'indicador': return <IndicadorProducao nome={param} />;
-    default: return <VisaoProducao />;
+    case 'metas': return <VisaoProducao />;
+    default: return <InicioProducao query={rota.query} />;
   }
 }
 

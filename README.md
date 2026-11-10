@@ -112,19 +112,22 @@ O painel tem uma área por gerência, cada uma lendo a sua planilha:
 | Financeiro (`#/`) | GGCCG | `planilhaId` |
 | Produção (`#/producao`) | GMCG | `planilhaProducaoId` (aba `Dados_Tratados`) |
 
-**Perfis:** em `planilhaPerfisId` vai o ID de uma planilha com a aba `PERFIS`:
+**Perfis:** em `planilhaPerfisId` vai o ID da planilha "controle de acesso aos paineis" (primeira aba), com as colunas `nome | email | acessos permitidos`:
 
-| E-MAIL | PERFIL | NOME |
+| nome | email | acessos permitidos |
 |---|---|---|
-| fulana@gmail.com | GGCCG | Fulana |
-| beltrano@gmail.com | GMCG | Beltrano |
-| cgicg@exemplo.com | ADMIN | Equipe CGICG |
+| Fulana | fulana@exemplo.com | GGCCG |
+| Beltrano | beltrano@exemplo.com | GMCG |
+| Ciclana | ciclana@exemplo.com | GMCG, GGCCG |
 
-`GGCCG` vê o Financeiro, `GMCG` vê a Produção, `ADMIN`/`DGMCG`/`CGICG` veem tudo (mais de um perfil: separe por vírgula). Quem não está na lista não entra. A planilha de perfis precisa estar compartilhada (leitura) com todos os e-mails da lista. Com `planilhaPerfisId` vazio, não há controle de perfis.
+`GGCCG` vê o Financeiro, `GMCG` vê a Produção; vários separados por vírgula (`ADMIN` = tudo). Quem não está na lista não entra. A planilha precisa estar compartilhada (leitura) com todos os e-mails da lista. Outras colunas são ignoradas — **não guarde senhas nela**: o login é feito pela conta Google.
 
 O perfil organiza o que cada pessoa vê; quem protege os **dados** continua sendo o compartilhamento de cada planilha no Google.
 
 ## Produção (GMCG)
+
+**Início:** resumo (OSS, hospitais, UPAs, UPAEs, carretas, % de metas cumpridas), busca de unidade e duas formas de navegar: **mapa interativo** de Pernambuco (Leaflet + OpenStreetMap; cor do ponto por metas cumpridas ou por tipo) e **cartões por OSS**. As coordenadas, cidade, endereço e CNES vêm da aba `Unidades` (e `OSS (legenda)`) da planilha "BD Unidades OSS - Consolidado" (`planilhaCadastroId`). Coordenadas sem a vírgula decimal (ex.: `-807265`) são corrigidas; fora de Pernambuco são ignoradas. O navegador precisa acessar `tile.openstreetmap.org` para desenhar o mapa.
+
 
 Lê a aba `Dados_Tratados` (`Ano | Tipo | MACRO | GERES | OSS | Unidade | C.G. | Indicador | Mês | Meta | Produção | % | Status_Meta`). Meta cumprida = produção ≥ meta do mês (recalculado; a coluna Status_Meta não é usada). Telas: visão geral, unidades, unidade (indicadores e mês a mês) e indicadores (ranking das unidades). Cada unidade é avaliada pelas próprias metas; nada é somado entre unidades.
 

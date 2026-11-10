@@ -10,10 +10,13 @@ import GraficoMensal from '../../components/comum/GraficoMensal';
 import BotaoExportar from '../../components/comum/BotaoExportar';
 import Trilha from '../../components/layout/Trilha';
 import { Progresso } from '../../components/comum/Graficos';
+import Mapa from '../../components/comum/Mapa';
+import { TIPOS_MAPA } from './InicioProducao';
 
 export default function UnidadeProducao({ id, query }) {
   const { modelo, comps, janela, filtro } = useProducao();
   const u = modelo.porId[id];
+  const ossInfo = u && modelo.oss.find((o) => o.sigla === u.oss);
   const r = useMemo(() => (u ? resumoUnidade(u, comps) : null), [u, comps]);
   if (!u) return <div className="vazio-pagina">Unidade não encontrada. <a href={link('producao', 'unidades')}>Voltar para unidades</a></div>;
 
@@ -30,9 +33,28 @@ export default function UnidadeProducao({ id, query }) {
       <div className="titulo-pagina">
         <div>
           <h1>{u.nome}</h1>
-          <p className="sub">{[u.cg && `CG ${u.cg}`, u.oss, u.tipo, u.macro && `Macro ${u.macro}`, u.geres && `${u.geres} GERES`].filter(Boolean).join(' · ')}</p>
+          <p className="sub">{[u.tipo, u.cidade, u.cg && `CG ${u.cg}`, u.oss, u.macro && `Macro ${u.macro}`, u.geres && `${u.geres} GERES`].filter(Boolean).join(' · ')}</p>
         </div>
       </div>
+
+      {u.cad && (
+        <div className="grade-identificacao">
+          <Card titulo="Identificação">
+            <dl className="ficha">
+              <div><dt>OSS</dt><dd>{u.oss}{ossInfo?.razao && <small>{ossInfo.razao}</small>}</dd></div>
+              <div><dt>Contrato</dt><dd>{u.cad.contrato || u.cg || '—'}{u.cad.situacao && <small>{u.cad.situacao}{u.cad.vigencia && ` · vigência até ${u.cad.vigencia}`}</small>}</dd></div>
+              <div><dt>Cidade</dt><dd>{u.cad.cidade || '—'}{u.cad.geres && <small>GERES {u.cad.geres}{u.cad.macro && ` · Macro ${u.cad.macro}`}</small>}</dd></div>
+              <div><dt>CNES</dt><dd>{u.cad.cnes || '—'}</dd></div>
+              <div className="largo"><dt>Endereço</dt><dd>{u.cad.endereco || '—'}</dd></div>
+            </dl>
+          </Card>
+          {u.cad.lat && u.cad.lng && (
+            <Card className="card-mapa">
+              <Mapa altura={230} agrupar={false} pontos={[{ id: u.id, lat: u.cad.lat, lng: u.cad.lng, nome: u.nome, letra: (TIPOS_MAPA[u.tipo] || {}).letra, cor: (TIPOS_MAPA[u.tipo] || {}).cor || '#122A54' }]} />
+            </Card>
+          )}
+        </div>
+      )}
 
       {!r.avaliados ? (
         <div className="vazio-pagina">Sem produção informada em {rotuloPeriodo(comps, filtro.periodo)}.</div>

@@ -7,6 +7,7 @@ import * as local from '../services/local';
 import { areasDoUsuario } from '../services/perfis';
 import { montarModelo } from '../services/modelo';
 import { montarProducao } from '../services/producao';
+import { montarCadastro } from '../services/cadastro';
 
 const usaLocal = () => local.temDadosEmbutidos() || CONFIG.fonte === 'local';
 
@@ -50,8 +51,12 @@ const CARREGADORES = {
     return m;
   },
   producao: async () => {
-    const bruto = usaLocal() ? { linhas: (await local.carregar()).producaoLinhas || [] } : await sheets.carregarProducao(await tokenOuLogin());
-    const m = montarProducao(bruto.linhas);
+    let bruto;
+    if (usaLocal()) {
+      const d = await local.carregar();
+      bruto = { linhas: d.producaoLinhas || [], cadastroLinhas: d.cadastroLinhas || [], ossLinhas: d.ossLinhas || [] };
+    } else bruto = await sheets.carregarProducao(await tokenOuLogin());
+    const m = montarProducao(bruto.linhas, montarCadastro(bruto.cadastroLinhas, bruto.ossLinhas), bruto.cadastroErro);
     if (!m.registros.length) throw new Error('Nenhum dado de produção encontrado na aba Dados_Tratados.');
     return m;
   },
