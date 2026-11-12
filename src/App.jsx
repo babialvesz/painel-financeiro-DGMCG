@@ -11,8 +11,7 @@ import TelaLogin from './telas/TelaLogin';
 import VisaoGeral from './telas/VisaoGeral';
 import Unidades from './telas/Unidades';
 import Unidade from './telas/Unidade';
-import Itens from './telas/Itens';
-import Item from './telas/Item';
+import DespesasPorItem from './telas/DespesasPorItem';
 import Descontos from './telas/Descontos';
 import Entregas from './telas/Entregas';
 import EntregaUnidade from './telas/EntregaUnidade';
@@ -48,8 +47,8 @@ function TelaFinanceiro({ rota }) {
   switch (tela) {
     case 'unidades': return <Unidades query={rota.query} />;
     case 'unidade': return <Unidade aba={param} query={rota.query} />;
-    case 'itens': return <Itens />;
-    case 'item': return <Item codigo={param} query={rota.query} />;
+    case 'itens': return <DespesasPorItem />;
+    case 'item': return <DespesasPorItem codigo={param} />;
     case 'descontos': return <Descontos query={rota.query} />;
     case 'entregas': return <Entregas query={rota.query} />;
     case 'entrega': return <EntregaUnidade id={param} />;
