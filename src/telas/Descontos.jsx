@@ -7,7 +7,6 @@ import Card from '../components/comum/Card';
 import StatCard from '../components/comum/StatCard';
 import BarrasLista from '../components/comum/BarrasLista';
 import GraficoMensal from '../components/comum/GraficoMensal';
-import BotaoExportar from '../components/comum/BotaoExportar';
 import Icone from '../components/comum/Icone';
 import { Progresso } from '../components/comum/Graficos';
 import { useOrdenacao } from '../components/comum/useOrdenacao';
@@ -119,8 +118,6 @@ export default function Descontos({ query }) {
             sub={unidadeSel
               ? <>Mostrando só <b>{nomeExibir(lista[0] || { nome: unidadeSel })}</b> · <a href={link('descontos')}>mostrar todas</a></>
               : 'Clique nos títulos para ordenar. Unidades acompanhadas no painel têm link para a página delas.'}
-            acoes={<BotaoExportar nome="descontos" cabecalho={['Unidade', 'Competência', 'Valor', 'Classificação', 'Objeto contratual', 'SEI', 'Justificativa']}
-              linhas={() => ordenadas.map((d) => [d.unidade, rotuloMes(d.comp), d.valor, d.classificacao, d.objeto, d.sei, d.justificativa])} />}
           >
             <div className="rolagem">
               <table className="tabela">

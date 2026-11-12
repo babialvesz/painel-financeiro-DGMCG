@@ -5,7 +5,6 @@ import { rotuloItem } from '../../services/modelo';
 import Card from '../../components/comum/Card';
 import Icone from '../../components/comum/Icone';
 import Sparkline from '../../components/comum/Sparkline';
-import BotaoExportar from '../../components/comum/BotaoExportar';
 import Comparacao from '../../components/comum/Comparacao';
 import { Progresso } from '../../components/comum/Graficos';
 import { useOrdenacao } from '../../components/comum/useOrdenacao';
@@ -124,9 +123,6 @@ function TabelaItens({ u, modelo, analise, onAbrirItem }) {
     <Card
       titulo="Todas as despesas da unidade"
       sub="Abra os grupos pela seta ou veja do maior para o menor. Clique numa linha para ver o detalhe."
-      acoes={<BotaoExportar nome={`despesas-${u.aba}`} cabecalho={['Código', 'Item', 'Despesa', '% do total', 'Média por mês', 'Menor mês', 'Maior mês', 'Diferença', '% nas parecidas']}
-        linhas={() => Object.values(linhas).sort((a, b) => modelo.ordemCodigo(a.c, b.c))
-          .map((l) => [l.c, l.item.n, l.total, l.pct * 100, l.media, l.min, l.max, l.varRS, l.pctPares === null ? '' : l.pctPares * 100])} />}
     >
       <div className="barra-ferramentas">
         <div className="segmentado" role="group" aria-label="Modo">

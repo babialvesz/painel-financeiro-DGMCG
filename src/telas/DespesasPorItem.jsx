@@ -8,7 +8,6 @@ import {
   caminho, criarReferencias, faixaMeses, fatia, mesCurto, mesLongo, nomeItem, nomeItemCurto, opcoesDespesa,
   ORDEM_PORTE, pct0, prepararUnidades, raizDe, reais, reaisLongo,
 } from '../utils/despesas';
-import BotaoExportar from '../components/comum/BotaoExportar';
 import '../styles/despesas.css';
 
 const SELO = {
@@ -246,8 +245,6 @@ function Ranking({ ctx, item: c, setItem, escolhidas, setEscolhidas, aoComparar 
           <div className="controles">
             {temPartes && <Seg rotulo="Mostrar como:" id="lb-mc" valor={modo} onChange={setModo} opcoes={[['lista', 'Ranking'], ['matriz', 'Tabela das partes']]} />}
             {(modo !== 'matriz' || !temPartes) && <Seg rotulo="Ordenar por:" id="lb-or" valor={ordem} onChange={setOrdem} opcoes={[['fatia', 'Maior fatia'], ['dif', 'Diferença para as parecidas']]} />}
-            <BotaoExportar nome={`despesas-${c}`} cabecalho={['Unidade', 'Tipo', 'Porte', 'Meses enviados', `Fatia de ${nomeC} (%)`, 'Valor (R$)', 'Média das parecidas (%)', 'Parecidas usadas', 'Situação']}
-              linhas={() => lista.map((l) => [l.x.u.nome, l.x.tipo, l.x.porte, l.x.nMeses, l.p * 100, l.v, l.r ? l.r.media * 100 : '', l.r ? l.r.rotulo : '', { acima: 'Bem acima', abaixo: 'Bem abaixo', inc: 'Dados incompletos' }[l.e] || 'Dentro do normal'])} />
           </div></div>
 
         {modo === 'matriz' && temPartes ? <TabelaPartes ctx={ctx} base={base} c={c} /> : lista.length ? (

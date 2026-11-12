@@ -7,7 +7,6 @@ import { pct, plural, rotuloMes, rotuloPeriodo } from '../../utils/formatacao';
 import Card from '../../components/comum/Card';
 import StatCard from '../../components/comum/StatCard';
 import GraficoMensal from '../../components/comum/GraficoMensal';
-import BotaoExportar from '../../components/comum/BotaoExportar';
 import Trilha from '../../components/layout/Trilha';
 import { Progresso } from '../../components/comum/Graficos';
 import Mapa from '../../components/comum/Mapa';
@@ -70,9 +69,7 @@ export default function UnidadeProducao({ id, query }) {
           </div>
 
           <div className="grade-2">
-            <Card titulo="Indicadores" sub="Produção e meta somadas nos meses do período (só desta unidade). Clique num indicador para ver mês a mês."
-              acoes={<BotaoExportar nome={`producao-${u.id}`} cabecalho={['Indicador', 'Meta', 'Produção', '% da meta', 'Meses cumpridos', 'Meses avaliados']}
-                linhas={() => inds.map((i) => [i.indicador, i.meta, i.prod, i.pct, i.cumpridos, i.avaliados])} />}>
+            <Card titulo="Indicadores" sub="Produção e meta somadas nos meses do período (só desta unidade). Clique num indicador para ver mês a mês.">
               <div className="rolagem">
                 <table className="tabela">
                   <thead><tr><th>Indicador</th><th className="num">Meta</th><th className="num">Produção</th><th className="num">% da meta</th><th className="centro">Meses na meta</th></tr></thead>

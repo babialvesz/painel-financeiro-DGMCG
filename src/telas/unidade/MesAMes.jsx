@@ -3,7 +3,6 @@ import { valor } from '../../utils/analise';
 import { brl, rotuloMes } from '../../utils/formatacao';
 import { rotuloItem } from '../../services/modelo';
 import Card from '../../components/comum/Card';
-import BotaoExportar from '../../components/comum/BotaoExportar';
 
 // Demonstrativo: recebido, gasto por grupo e resultado, mês a mês (valores exatos)
 export default function MesAMes({ u, meses, onAbrirItem }) {
@@ -23,8 +22,6 @@ export default function MesAMes({ u, meses, onAbrirItem }) {
     <Card
       titulo="Tabela mês a mês"
       sub="Valores exatos de cada mês. Clique num grupo de despesa para ver o detalhe."
-      acoes={<BotaoExportar nome={`demonstrativo-${u.aba}`} cabecalho={['Linha', ...meses.map(rotuloMes), 'Total']}
-        linhas={() => linhas.map((l) => [l.nome, ...meses.map((m) => valor(u, m, l.id)), total(l.id)])} />}
     >
       <div className="rolagem">
         <table className="tabela demonstrativo">

@@ -7,7 +7,6 @@ import { brl, contrato, fraseResultado, nomeCurto, plural, rotuloMes, rotuloPeri
 import Card from '../components/comum/Card';
 import Pill from '../components/comum/Pill';
 import Icone from '../components/comum/Icone';
-import BotaoExportar from '../components/comum/BotaoExportar';
 import { BarrasResultado } from '../components/comum/Graficos';
 
 const ORDENS = {
@@ -73,8 +72,7 @@ export default function Unidades({ query }) {
           {lista.map((s) => <CartaoUnidade key={s.u.aba} s={s} janela={janela} meses={meses} deducao={deducoes[s.u.aba] || 0} />)}
         </div>
       ) : (
-        <Card acoes={<BotaoExportar nome="situacao-unidades" cabecalho={['Unidade', 'Tipo', 'Porte', 'Receitas', 'Despesas', 'Resultado', 'Deduções', 'Com deduções', 'Situação', 'Meses no vermelho']}
-          linhas={() => lista.map((s) => [s.u.nome, s.u.grupo, s.u.porte, s.rec, s.desp, s.res, deducoes[s.u.aba] || 0, s.res - (deducoes[s.u.aba] || 0), s.res < 0 ? 'Déficit' : 'Superávit', s.mesesDef])} />}
+        <Card
           titulo="Situação de cada unidade" sub="Passe o mouse nos pontos para ver o resultado de cada mês.">
           <div className="rolagem">
             <table className="tabela">

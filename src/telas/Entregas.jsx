@@ -9,7 +9,6 @@ import Card from '../components/comum/Card';
 import StatCard from '../components/comum/StatCard';
 import BarrasLista from '../components/comum/BarrasLista';
 import GraficoMensal from '../components/comum/GraficoMensal';
-import BotaoExportar from '../components/comum/BotaoExportar';
 import Icone from '../components/comum/Icone';
 import { Progresso } from '../components/comum/Graficos';
 
@@ -100,9 +99,7 @@ export default function Entregas({ query }) {
             </Card>
           </div>
 
-          <Card titulo="Calendário de entregas" sub="Cada quadrinho mostra o dia em que a unidade entregou a competência. Passe o mouse para ver o prazo e os dias; clique na unidade para ver o detalhe."
-            acoes={<BotaoExportar nome="entregas-pcf" cabecalho={['Unidade', 'Tipo', 'OSS', ...comps.flatMap((c) => [`${rotuloMes(c)} entrega`, `${rotuloMes(c)} situação`]), 'No prazo', 'Avaliadas']}
-              linhas={() => filtradas.map((x) => [x.e.unidade, x.e.tipo, x.e.oss, ...comps.flatMap((c) => { const s = x.e.meses[c]; return s ? [s.entrega ? dataBR(s.entrega) : '', SITUACOES[s.status].nome] : ['', '']; }), x.noPrazo, x.avaliadas])} />}>
+          <Card titulo="Calendário de entregas" sub="Cada quadrinho mostra o dia em que a unidade entregou a competência. Passe o mouse para ver o prazo e os dias; clique na unidade para ver o detalhe.">
             <div className="barra-ferramentas">
               <div className="chips" role="group" aria-label="Filtrar">
                 {chip('', 'Todas', unidadesInd.length)}

@@ -20,7 +20,7 @@ Princípio: **cada unidade tem orçamento próprio, então o painel nunca soma v
 | **Gasto (item)** | Ranking das unidades por peso ou valor, composição e tabela detalhada |
 | **Descontos** | Descontos, devoluções e compensações: total, por unidade, por objeto contratual, por mês e todos os lançamentos (com nº SEI e justificativa). Também aparece na página de cada unidade |
 
-Filtros globais (ano, período, tipo, porte). Toda tabela tem **Exportar** (CSV para Excel). Tema escuro (padrão) e claro. Cada tela tem endereço próprio.
+Filtros globais (ano, período, tipo, porte). Não há botão de exportar: os dados só são vistos no painel, para não saírem do controle de acesso das planilhas. Tema escuro (padrão) e claro. Cada tela tem endereço próprio.
 
 ## Como funciona
 
