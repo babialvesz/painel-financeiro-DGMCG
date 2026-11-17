@@ -154,7 +154,7 @@ A tela **Entregas** lê direto a aba `DATAS DE ENTREGA` (cronograma de entrega d
 O arquivo `config.json`, ao lado do `index.html`, define o ID do cliente OAuth do Google e o ID da planilha. Basta editá-lo no servidor; o painel lê esse arquivo toda vez que abre. Se ele não existir, valem os valores do `.env` usados no build.
 
 ```json
-{ "googleClientId": "xxxx.apps.googleusercontent.com", "planilhaId": "1yVDPy..." }
+{ "googleClientId": "xxxx.apps.googleusercontent.com", "planilhaUnica": "ID da base unificada" }
 ```
 
 O build **nunca** inclui `dados-local.json` (dados de teste).

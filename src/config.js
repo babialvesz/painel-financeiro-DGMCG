@@ -36,10 +36,10 @@ export const CONFIG = {
     producao: { nome: 'Produção', gerencia: 'GMCG', titulo: 'Produção das Unidades', inicio: '#/producao' },
   },
   // Planilha de produção (GMCG) e aba lida
-  planilhaProducaoId: import.meta.env.VITE_PLANILHA_PRODUCAO_ID || '1T9mZMRHQ1Lt1bZZuuZNSGxd89CBjC1g7eK2q0It5HKo',
+  planilhaProducaoId: import.meta.env.VITE_PLANILHA_PRODUCAO_ID || '',
   abaProducao: 'Dados_Tratados',
   // Cadastro das unidades (cidade, endereço, CNES, latitude/longitude) — BD Unidades OSS, aba Unidades
-  planilhaCadastroId: import.meta.env.VITE_PLANILHA_CADASTRO_ID || '1h6yEUJCEzHAtWVw1IHGtND5g79Qmv3RW7fBL-qdmXmY',
+  planilhaCadastroId: import.meta.env.VITE_PLANILHA_CADASTRO_ID || '',
   abaCadastro: 'Unidades',
   abaOss: 'OSS (legenda)',
   // Planilha única de configuração "Painel DGMCG – Cadastro e acessos" (abas Acessos, Unidades, OSS, Vínculos).
@@ -49,7 +49,7 @@ export const CONFIG = {
   // Perfis: planilha "controle de acesso aos paineis" (colunas nome | email | acessos permitidos).
   // acessos = GGCCG (financeiro), GMCG (produção), ADMIN (tudo); vários separados por vírgula.
   // Vazio = sem controle de perfis.
-  planilhaPerfisId: import.meta.env.VITE_PLANILHA_PERFIS_ID || '146YqXQ9X7W7tkdOD06XLf7Pph0RdiAueVaddDV6bfwI',
+  planilhaPerfisId: import.meta.env.VITE_PLANILHA_PERFIS_ID || '',
   abaPerfis: '', // vazio = primeira aba da planilha
   // E-mails com acesso a todas as áreas sem depender da planilha de acessos (config.json → "acessoLivre")
   acessoLivre: [],
