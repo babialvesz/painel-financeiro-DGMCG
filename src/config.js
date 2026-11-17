@@ -41,6 +41,11 @@ export const CONFIG = {
   // Cadastro das unidades (cidade, endereço, CNES, latitude/longitude) — BD Unidades OSS, aba Unidades
   planilhaCadastroId: import.meta.env.VITE_PLANILHA_CADASTRO_ID || '1h6yEUJCEzHAtWVw1IHGtND5g79Qmv3RW7fBL-qdmXmY',
   abaCadastro: 'Unidades',
+  abaOss: 'OSS (legenda)',
+  // Planilha única de configuração "Painel DGMCG – Cadastro e acessos" (abas Acessos, Unidades, OSS, Vínculos).
+  // Quando preenchida (config.json → "planilhaConfigId"), substitui a planilha de acessos e a BD Unidades,
+  // e os vínculos da aba Vínculos completam/substituem os escritos aqui.
+  planilhaConfigId: '',
   // Perfis: planilha "controle de acesso aos paineis" (colunas nome | email | acessos permitidos).
   // acessos = GGCCG (financeiro), GMCG (produção), ADMIN (tudo); vários separados por vírgula.
   // Vazio = sem controle de perfis.
@@ -98,6 +103,10 @@ export async function carregarConfigServidor() {
     if (c.planilhaProducaoId) CONFIG.planilhaProducaoId = String(c.planilhaProducaoId).trim();
     if (c.planilhaPerfisId !== undefined) CONFIG.planilhaPerfisId = String(c.planilhaPerfisId).trim();
     if (c.planilhaCadastroId) CONFIG.planilhaCadastroId = String(c.planilhaCadastroId).trim();
+    if (c.planilhaConfigId) {
+      const id = String(c.planilhaConfigId).trim();
+      Object.assign(CONFIG, { planilhaConfigId: id, planilhaPerfisId: id, abaPerfis: 'Acessos', planilhaCadastroId: id, abaCadastro: 'Unidades', abaOss: 'OSS' });
+    }
     if (Array.isArray(c.acessoLivre)) CONFIG.acessoLivre = c.acessoLivre.map((e) => String(e).trim().toLowerCase()).filter(Boolean);
   } catch { /* sem config.json: usa os valores do build (.env) */ }
 }

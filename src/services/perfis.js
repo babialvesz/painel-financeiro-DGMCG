@@ -42,5 +42,30 @@ export async function areasDoUsuario(email, token) {
   if (!linha) throw new Error(`O e-mail ${email} não está cadastrado no painel. Peça acesso à CGICG.`);
   const areas = areasDoPerfil(linha[iP]);
   if (!areas.length) throw new Error(`O perfil "${linha[iP] || '(vazio)'}" não dá acesso a nenhuma área. Use GGCCG, GMCG ou ADMIN.`);
+  if (CONFIG.planilhaConfigId) {
+    try { aplicarVinculos(await lerAbaCrua('Vínculos', token, CONFIG.planilhaConfigId)); } catch { /* sem a aba: usa os vínculos do código */ }
+  }
   return { areas, perfil: String(linha[iP]).trim() };
+}
+
+/**
+ * Aba Vínculos da planilha de configuração: tipo | como aparece na fonte | aba no painel | observação.
+ * Tipos: Entregas (sigla da aba DATAS DE ENTREGA), Descontos (código da unidade), Produção (nome na
+ * planilha de produção) e Nome exibido (nome que o painel mostra para a aba).
+ */
+export function aplicarVinculos(linhas) {
+  const k = (c) => norm(c).replace(/[^A-Z]/g, '');
+  const iCab = linhas.findIndex((l) => l.some((c) => k(c) === 'TIPO'));
+  if (iCab < 0) return;
+  const cab = linhas[iCab].map(k);
+  const iT = cab.indexOf('TIPO'), iF = cab.findIndex((c) => c.startsWith('COMOAPARECE')), iA = cab.findIndex((c) => c.startsWith('ABANOPAINEL'));
+  if (iF < 0 || iA < 0) return;
+  linhas.slice(iCab + 1).forEach((l) => {
+    const tipo = k(l[iT]), fonte = String(l[iF] ?? '').trim(), aba = String(l[iA] ?? '').trim();
+    if (!tipo || !fonte || !aba) return;
+    if (tipo === 'ENTREGAS') CONFIG.vinculoEntregas[fonte] = aba;
+    else if (tipo === 'DESCONTOS') CONFIG.vinculoDescontos[fonte] = aba;
+    else if (tipo === 'PRODUCAO') CONFIG.vinculoProducao[aba] = fonte;
+    else if (tipo === 'NOMEEXIBIDO') CONFIG.nomesPadrao[aba] = fonte;
+  });
 }

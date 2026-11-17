@@ -36,7 +36,7 @@ export async function carregarProducao(token) {
   const [linhas, cad, oss] = await Promise.all([
     lerAbaCrua(CONFIG.abaProducao, token, CONFIG.planilhaProducaoId),
     CONFIG.planilhaCadastroId ? opcional(CONFIG.abaCadastro) : [],
-    CONFIG.planilhaCadastroId ? opcional('OSS (legenda)') : [],
+    CONFIG.planilhaCadastroId ? opcional(CONFIG.abaOss) : [],
   ]);
   return {
     linhas,

@@ -175,3 +175,9 @@ O painel é um site estático. Não usa banco de dados, servidor de aplicação 
 6. Informar à DGMCG o endereço final (ex.: `https://painel.saude.pe.gov.br`). A DGMCG precisa cadastrar esse endereço em "Origens JavaScript autorizadas" no Google Cloud, senão o login dá erro.
 
 Para atualizar o site depois de uma mudança no código: `git pull`, `npm run build` e copiar o `dist/` de novo. Os **dados** não exigem nada da TI: atualizam sozinhos pela planilha.
+
+## Planilha de configuração (cadastro e acessos)
+
+A planilha **Painel DGMCG – Cadastro e acessos** junta o que não é dado sensível: abas **Acessos** (perfis), **Unidades** e **OSS** (vindas da BD Unidades OSS por IMPORTRANGE), **Vínculos** (nomes que não batem entre planilhas) e **Fontes** (lista de planilhas do painel). Os dados financeiros e de produção continuam em planilhas separadas, para cada gerência ver só a sua.
+
+Para o painel usar essa planilha, coloque no `config.json`: `"planilhaConfigId": "<ID da planilha>"`. Ela substitui a planilha de acessos e a BD Unidades. Todas as pessoas da aba Acessos precisam ter permissão de Leitor nela.
