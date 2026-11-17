@@ -176,8 +176,10 @@ O painel é um site estático. Não usa banco de dados, servidor de aplicação 
 
 Para atualizar o site depois de uma mudança no código: `git pull`, `npm run build` e copiar o `dist/` de novo. Os **dados** não exigem nada da TI: atualizam sozinhos pela planilha.
 
-## Planilha de configuração (cadastro e acessos)
+## Base unificada
 
-A planilha **Painel DGMCG – Cadastro e acessos** junta o que não é dado sensível: abas **Acessos** (perfis), **Unidades** e **OSS** (vindas da BD Unidades OSS por IMPORTRANGE), **Vínculos** (nomes que não batem entre planilhas) e **Fontes** (lista de planilhas do painel). Os dados financeiros e de produção continuam em planilhas separadas, para cada gerência ver só a sua.
+A planilha **Painel DGMCG – Base unificada** junta tudo o que o painel lê: abas **BASE_CONSOLIDADA**, **DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO** e **DATAS DE ENTREGA** (do Acompanhamento Financeiro), **Dados_Tratados** (da Produção), **Unidades** e **OSS** (da BD Unidades OSS), todas por IMPORTRANGE, mais **Acessos** (perfis), **Vínculos** (nomes que não batem entre planilhas) e **Fontes**. Os dados continuam sendo digitados nas planilhas de origem.
 
-Para o painel usar essa planilha, coloque no `config.json`: `"planilhaConfigId": "<ID da planilha>"`. Ela substitui a planilha de acessos e a BD Unidades. Todas as pessoas da aba Acessos precisam ter permissão de Leitor nela.
+Para o painel usar só ela, coloque no `config.json`: `"planilhaUnica": "<ID da planilha>"`. Todas as pessoas da aba Acessos precisam ter permissão de Leitor nela — e quem tem acesso vê financeiro e produção.
+
+(Também dá para usar só a parte de cadastro e acessos com `"planilhaConfigId"`, mantendo financeiro e produção nas planilhas de origem.)

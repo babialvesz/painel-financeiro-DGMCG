@@ -103,6 +103,11 @@ export async function carregarConfigServidor() {
     if (c.planilhaProducaoId) CONFIG.planilhaProducaoId = String(c.planilhaProducaoId).trim();
     if (c.planilhaPerfisId !== undefined) CONFIG.planilhaPerfisId = String(c.planilhaPerfisId).trim();
     if (c.planilhaCadastroId) CONFIG.planilhaCadastroId = String(c.planilhaCadastroId).trim();
+    // "planilhaUnica": a base unificada traz tudo (financeiro, produção, cadastro, acessos e vínculos)
+    if (c.planilhaUnica) {
+      const id = String(c.planilhaUnica).trim();
+      CONFIG.planilhaId = id; CONFIG.planilhaProducaoId = id; c.planilhaConfigId = id;
+    }
     if (c.planilhaConfigId) {
       const id = String(c.planilhaConfigId).trim();
       Object.assign(CONFIG, { planilhaConfigId: id, planilhaPerfisId: id, abaPerfis: 'Acessos', planilhaCadastroId: id, abaCadastro: 'Unidades', abaOss: 'OSS' });
