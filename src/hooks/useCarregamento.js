@@ -8,6 +8,7 @@ import { areasDoUsuario } from '../services/perfis';
 import { montarModelo } from '../services/modelo';
 import { montarProducao } from '../services/producao';
 import { montarCadastro } from '../services/cadastro';
+import { lerSazonalidade, vincularSazonalidade } from '../services/sazonalidade';
 
 const usaLocal = () => local.temDadosEmbutidos() || CONFIG.fonte === 'local';
 
@@ -54,10 +55,14 @@ const CARREGADORES = {
     let bruto;
     if (usaLocal()) {
       const d = await local.carregar();
-      bruto = { linhas: d.producaoLinhas || [], cadastroLinhas: d.cadastroLinhas || [], ossLinhas: d.ossLinhas || [] };
+      bruto = { linhas: d.producaoLinhas || [], cadastroLinhas: d.cadastroLinhas || [], ossLinhas: d.ossLinhas || [], sazonalidadeLinhas: d.sazonalidadeLinhas || [] };
     } else bruto = await sheets.carregarProducao(await tokenOuLogin());
     const m = montarProducao(bruto.linhas, montarCadastro(bruto.cadastroLinhas, bruto.ossLinhas), bruto.cadastroErro);
     if (!m.registros.length) throw new Error('Nenhum dado de produção encontrado na aba Dados_Tratados.');
+    m.sazonalidade = vincularSazonalidade(lerSazonalidade(bruto.sazonalidadeLinhas || []), m.unidades,
+      { campo: 'id', idDe: (u) => u.id, nomeDe: (u) => u.nome, tipoDe: () => true });
+    m.sazonalidadeLigada = (bruto.sazonalidadeLinhas || []).length > 0;
+    m.sazonalidadeErro = bruto.sazonalidadeErro || '';
     return m;
   },
 };

@@ -68,5 +68,6 @@ export function aplicarVinculos(linhas) {
     else if (tipo === 'PRODUCAO') CONFIG.vinculoProducao[aba] = fonte;
     else if (tipo === 'NOMEEXIBIDO') CONFIG.nomesPadrao[aba] = fonte;
     else if (tipo === 'PROJECAO') CONFIG.vinculoProjecao[fonte] = aba;
+    else if (tipo === 'SAZONALIDADE') CONFIG.vinculoSazonalidade[fonte] = aba;
   });
 }

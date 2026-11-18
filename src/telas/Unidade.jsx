@@ -20,6 +20,7 @@ import ItensUnidade from './unidade/ItensUnidade';
 import MesAMes from './unidade/MesAMes';
 import DetalheItem from './unidade/DetalheItem';
 import ProjecaoUnidade from './unidade/ProjecaoUnidade';
+import CartaoSazonalidade from '../components/comum/CartaoSazonalidade';
 
 export default function Unidade({ aba, query }) {
   const { modelo, meses, janela, filtro } = usePainel();
@@ -89,6 +90,8 @@ export default function Unidade({ aba, query }) {
               </div>
             </Card>
           )}
+
+          <CartaoSazonalidade registros={(modelo.sazonalidade || []).filter((x) => x.aba === u.aba)} />
 
           <div className="grade-2">
             <Card titulo="Receitas × despesas por mês" sub="Passe o mouse para ver o valor exato."

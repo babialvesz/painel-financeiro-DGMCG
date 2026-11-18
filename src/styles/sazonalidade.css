@@ -1,0 +1,37 @@
+/* Leitos de sazonalidade: card da unidade e aba própria na Produção */
+.card-saz .saz-unidade + .saz-unidade { border-top: 1px solid var(--borda); margin-top: 16px; padding-top: 16px; }
+.saz-total { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.saz-total > div { display: flex; flex-direction: column; }
+.saz-total b { font-size: 24px; font-variant-numeric: tabular-nums; color: var(--texto); line-height: 1.15; }
+.saz-total span { color: var(--texto-2); font-size: 13.5px; }
+.saz-icone { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--acento) 14%, var(--card)); color: var(--acento); }
+.saz-total .saz-selo { margin-left: auto; }
+.saz-selo { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 11px; font-size: 12.5px; font-weight: 650; white-space: nowrap; border: 1px solid var(--borda-forte); color: var(--texto-2); background: var(--card-2); }
+.saz-selo.ativo { border-color: var(--verde); color: var(--texto); background: var(--verde-fundo); }
+.saz-selo.desmobilizado { border-color: var(--borda-forte); color: var(--texto-2); background: var(--card-2); }
+.saz-selo.semData { border-color: var(--amarelo); color: var(--texto); background: var(--amarelo-fundo); }
+.saz-tipos { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; padding: 0; }
+.saz-tipos li { border: 1px solid var(--borda); background: var(--card-2); border-radius: 999px; padding: 5px 12px; font-size: 13px; color: var(--texto-2); }
+.saz-tipos li b { color: var(--texto); font-variant-numeric: tabular-nums; margin-right: 2px; }
+.saz-ficha { margin-top: 4px; }
+.saz-muted { color: var(--muted); }
+
+/* aba Sazonalidade */
+.saz-filtros { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.saz-barras { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.saz-barras li { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) 48px; align-items: center; gap: 12px; font-size: 13.5px; color: var(--texto-2); }
+.saz-barras .barra { height: 12px; border-radius: 999px; background: var(--trilho); overflow: hidden; }
+.saz-barras .barra span { display: block; height: 100%; border-radius: 999px; background: var(--acento); }
+.saz-barras b { text-align: right; color: var(--texto); font-variant-numeric: tabular-nums; }
+.saz-tabela td { vertical-align: top; }
+.saz-tabela .saz-tipos { margin: 0; gap: 6px; }
+.saz-tabela .saz-tipos li { padding: 3px 9px; font-size: 12px; }
+.saz-tabela small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.saz-tabela .num { text-align: right; font-variant-numeric: tabular-nums; }
+.saz-aviso { border: 1px solid var(--amarelo); background: var(--amarelo-fundo); border-radius: var(--raio-sm); padding: 12px 14px; font-size: 13.5px; color: var(--texto); margin-top: 14px; }
+@media (max-width: 700px) {
+  .saz-barras li { grid-template-columns: minmax(0, 1fr) 48px; }
+  .saz-barras .barra { grid-column: 1 / -1; grid-row: 2; }
+  .saz-total .saz-selo { margin-left: 0; }
+}
+.saz-tabela caption.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

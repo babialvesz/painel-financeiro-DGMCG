@@ -13,7 +13,12 @@ export const CONFIG = {
     entregas: 'DATAS DE ENTREGA',
     // projeção de repasses (aba Consolidado da planilha "Projeção + Fluxo de pagamento OSS", trazida por IMPORTRANGE)
     projecao: 'PROJECAO',
+    // leitos e reforço de RH da sazonalidade (planilha "Desmobilização de leitos e RH sazonalidade", por IMPORTRANGE)
+    sazonalidade: 'SAZONALIDADE',
   },
+  // Sazonalidade: liga o nome da unidade na planilha de sazonalidade à aba financeira ou ao nome da unidade na produção,
+  // quando não bate sozinho (aba Vínculos, tipo "Sazonalidade")
+  vinculoSazonalidade: {},
   // ano das competências da projeção quando o rótulo não traz o ano ("Competência Janeiro")
   anoProjecao: 2026,
   // Prazo de entrega da PCF: dia 25 do mês seguinte à competência.

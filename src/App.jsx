@@ -22,6 +22,7 @@ import UnidadesProducao from './telas/producao/UnidadesProducao';
 import UnidadeProducao from './telas/producao/UnidadeProducao';
 import IndicadoresProducao from './telas/producao/IndicadoresProducao';
 import IndicadorProducao from './telas/producao/IndicadorProducao';
+import Sazonalidade from './telas/producao/Sazonalidade';
 import Icone from './components/comum/Icone';
 import ModoApresentacao from './telas/apresentacao/ModoApresentacao';
 
@@ -40,6 +41,7 @@ const MENUS = {
     { id: 'metas', href: '#/producao/metas', nome: 'Metas', icone: 'grafico' },
     { id: 'unidades', href: '#/producao/unidades', nome: 'Unidades', icone: 'unidades', tambem: ['unidade'] },
     { id: 'indicadores', href: '#/producao/indicadores', nome: 'Indicadores', icone: 'meta', tambem: ['indicador'] },
+    { id: 'sazonalidade', href: '#/producao/sazonalidade', nome: 'Sazonalidade', icone: 'leito' },
     { id: 'apresentacao', href: '#/apresentacao', nome: 'Apresentar', icone: 'apresentacao' },
   ],
 };
@@ -67,6 +69,7 @@ function TelaProducao({ rota }) {
     case 'indicadores': return <IndicadoresProducao />;
     case 'indicador': return <IndicadorProducao nome={param} />;
     case 'metas': return <VisaoProducao />;
+    case 'sazonalidade': return <Sazonalidade query={rota.query} />;
     default: return <InicioProducao query={rota.query} />;
   }
 }

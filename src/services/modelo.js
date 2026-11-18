@@ -15,6 +15,7 @@ import { CONFIG } from '../config';
 import { lerLancamentos, vincularUnidades } from './descontos';
 import { lerEntregas, vincularEntregas } from './entregas';
 import { lerProjecao, vincularProjecao } from './projecao';
+import { lerSazonalidade, vincularSazonalidade } from './sazonalidade';
 
 export function montarModelo(bruto) {
   const unidades = bruto.unidades.map((u) => ({ ...u, nome: CONFIG.nomesPadrao[u.aba] || u.nome, v: {} }));
@@ -52,6 +53,8 @@ export function montarModelo(bruto) {
     projecao: vincularProjecao(lerProjecao(bruto.projecaoLinhas || []), ordenadas, { ...CONFIG.vinculoDescontos, ...CONFIG.vinculoProjecao }),
     projecaoErro: bruto.projecaoErro || '',
     projecaoLigada: Boolean((bruto.projecaoLinhas || []).length),
+    sazonalidade: vincularSazonalidade(lerSazonalidade(bruto.sazonalidadeLinhas || []), ordenadas,
+      { campo: 'aba', idDe: (u) => u.aba, nomeDe: (u) => u.nome, tipoDe: (u) => u.grupo && u.grupo !== CONFIG.semClassificacao }),
     atualizado: bruto.atualizado,
     unidades: ordenadas,
     porAba,

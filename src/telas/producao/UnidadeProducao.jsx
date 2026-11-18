@@ -11,6 +11,7 @@ import Trilha from '../../components/layout/Trilha';
 import { Progresso } from '../../components/comum/Graficos';
 import Mapa from '../../components/comum/Mapa';
 import { TIPOS_MAPA } from './InicioProducao';
+import CartaoSazonalidade from '../../components/comum/CartaoSazonalidade';
 
 export default function UnidadeProducao({ id, query }) {
   const { modelo, comps, janela, filtro } = useProducao();
@@ -54,6 +55,8 @@ export default function UnidadeProducao({ id, query }) {
           )}
         </div>
       )}
+
+      <CartaoSazonalidade registros={(modelo.sazonalidade || []).filter((x) => x.id === u.id)} linkTodas={link('producao', 'sazonalidade')} />
 
       {!r.avaliados ? (
         <div className="vazio-pagina">Sem produção informada em {rotuloPeriodo(comps, filtro.periodo)}.</div>

@@ -178,7 +178,9 @@ Para atualizar o site depois de uma mudança no código: `git pull`, `npm run bu
 
 ## Base unificada
 
-A planilha **Painel DGMCG – Base unificada** junta tudo o que o painel lê: abas **BASE_CONSOLIDADA**, **DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO** e **DATAS DE ENTREGA** (do Acompanhamento Financeiro), **Dados_Tratados** (da Produção), **Unidades** e **OSS** (da BD Unidades OSS), todas por IMPORTRANGE, mais **Acessos** (perfis), **Vínculos** (nomes que não batem entre planilhas) e **Fontes**. Os dados continuam sendo digitados nas planilhas de origem.
+A aba **SAZONALIDADE** alimenta a aba Sazonalidade da Produção e o card “Leitos de sazonalidade” na página de cada unidade (financeiro e produção). Siglas como HJMO e HRPSM são ligadas sozinhas; se alguma não bater, use a aba Vínculos (tipo “Sazonalidade”).
+
+A planilha **Painel DGMCG – Base unificada** junta tudo o que o painel lê: abas **BASE_CONSOLIDADA**, **DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO** e **DATAS DE ENTREGA** (do Acompanhamento Financeiro), **Dados_Tratados** (da Produção), **Unidades** e **OSS** (da BD Unidades OSS), **PROJECAO** (da Projeção + Fluxo de pagamento OSS) e **SAZONALIDADE** (da Desmobilização de leitos e RH sazonalidade), todas por IMPORTRANGE, mais **Acessos** (perfis), **Vínculos** (nomes que não batem entre planilhas) e **Fontes**. Os dados continuam sendo digitados nas planilhas de origem.
 
 Para o painel usar só ela, coloque no `config.json`: `"planilhaUnica": "<ID da planilha>"`. Todas as pessoas da aba Acessos precisam ter permissão de Leitor nela — e quem tem acesso vê financeiro e produção.
 

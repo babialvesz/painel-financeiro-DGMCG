@@ -33,13 +33,16 @@ async function explicarErro(r, nome) {
 /** Planilha de produção (GMCG): aba Dados_Tratados + cadastro das unidades (mapa), que é opcional. */
 export async function carregarProducao(token) {
   const opcional = (aba) => lerAbaCrua(aba, token, CONFIG.planilhaCadastroId).catch((e) => ({ erro: e.message }));
-  const [linhas, cad, oss] = await Promise.all([
+  const [linhas, cad, oss, saz] = await Promise.all([
     lerAbaCrua(CONFIG.abaProducao, token, CONFIG.planilhaProducaoId),
     CONFIG.planilhaCadastroId ? opcional(CONFIG.abaCadastro) : [],
     CONFIG.planilhaCadastroId ? opcional(CONFIG.abaOss) : [],
+    lerAbaCrua(CONFIG.abas.sazonalidade, token, CONFIG.planilhaProducaoId).catch((e) => ({ erro: e.message })),
   ]);
   return {
     linhas,
+    sazonalidadeLinhas: Array.isArray(saz) ? saz : [],
+    sazonalidadeErro: saz?.erro || '',
     cadastroLinhas: Array.isArray(cad) ? cad : [],
     ossLinhas: Array.isArray(oss) ? oss : [],
     cadastroErro: cad?.erro || '',
@@ -51,11 +54,12 @@ export async function carregarProducao(token) {
 export async function carregar(token) {
   // as abas de descontos e de entregas não podem derrubar o painel inteiro se falharem
   const opcional = (nome) => lerAbaCrua(nome, token).then((linhas) => ({ linhas }), (e) => ({ erro: e.message }));
-  const [base, descontos, entregas, projecao] = await Promise.all([
+  const [base, descontos, entregas, projecao, saz] = await Promise.all([
     lerAbaCrua(CONFIG.abas.base, token),
     opcional(CONFIG.abas.descontos),
     opcional(CONFIG.abas.entregas),
     opcional(CONFIG.abas.projecao),
+    opcional(CONFIG.abas.sazonalidade),
   ]);
   return {
     ...lerBase(base),
@@ -65,5 +69,7 @@ export async function carregar(token) {
     entregasErro: entregas.erro || '',
     projecaoLinhas: projecao.linhas || [],
     projecaoErro: projecao.erro || '',
+    sazonalidadeLinhas: saz.linhas || [],
+    sazonalidadeErro: saz.erro || '',
   };
 }
