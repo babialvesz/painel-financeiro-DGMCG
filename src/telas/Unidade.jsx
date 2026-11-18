@@ -19,6 +19,7 @@ import { indicadores } from '../utils/entregas';
 import ItensUnidade from './unidade/ItensUnidade';
 import MesAMes from './unidade/MesAMes';
 import DetalheItem from './unidade/DetalheItem';
+import ProjecaoUnidade from './unidade/ProjecaoUnidade';
 
 export default function Unidade({ aba, query }) {
   const { modelo, meses, janela, filtro } = usePainel();
@@ -35,7 +36,8 @@ export default function Unidade({ aba, query }) {
   const linhasPeriodo = [['Período', rotuloPeriodo(mesesU.length ? mesesU : meses, filtro.periodo)]];
   if (faltando.length) linhasPeriodo.push(['Ainda não enviou', faltando.map(rotuloMes).join(', ')]);
   const ver = query.ver === 'mensal' ? 'mensal' : 'itens';
-  const ir = (params) => navegar(link('unidade', aba, { ver: query.ver, item: query.item, ...params }));
+  const ir = (params) => navegar(link('unidade', aba, { ver: query.ver, item: query.item, proj: query.proj, ...params }));
+  const abrirProjecao = () => ir({ proj: '1', item: '' });
   const mesesJ = janela.filter((m) => u.v[m]);
   const classificacao = [u.grupo, u.porte].filter((x) => x && x !== CONFIG.semClassificacao).join(' · ');
   const alerta = s.mesesDef >= CONFIG.alertaMeses;
@@ -89,11 +91,13 @@ export default function Unidade({ aba, query }) {
           )}
 
           <div className="grade-2">
-            <Card titulo="Receitas × despesas por mês" sub="Passe o mouse para ver o valor exato.">
-              <GraficoMensal altura={220} meses={mesesJ} series={[
+            <Card titulo="Receitas × despesas por mês" sub="Passe o mouse para ver o valor exato."
+              acoes={<button type="button" className="bt-projecao" onClick={abrirProjecao}><Icone nome="projecao" tamanho={16} /> Comparar com projeção</button>}>
+              <GraficoMensal altura={220} meses={mesesJ} onClick={abrirProjecao} rotulo="Receitas e despesas por mês. Clique para comparar com a projeção de repasses." series={[
                 { nome: 'Receitas', cor: '--acento-suave', valores: mesesJ.map((m) => valor(u, m, 'REC')) },
                 { nome: 'Despesas', cor: '--acento', valores: mesesJ.map((m) => valor(u, m, 'DESP')) },
               ]} />
+              <p className="dica-grafico"><Icone nome="info" tamanho={14} />Clique no gráfico ou em “Comparar com projeção” para ver o repasse previsto pela SES, mês a mês.</p>
             </Card>
             <Card titulo="Resultado de cada mês" sub="Verde = superávit · vermelho = déficit.">
               <GraficoMensal altura={220} corPorSinal meses={mesesJ} series={[{ nome: 'Resultado', valores: mesesJ.map((m) => valor(u, m, 'RES')) }]} />
@@ -149,6 +153,7 @@ export default function Unidade({ aba, query }) {
       )}
 
       {query.item && analise && <DetalheItem u={u} codigo={query.item} analise={analise} onFechar={() => ir({ item: '' })} />}
+      {query.proj && <ProjecaoUnidade u={u} onFechar={() => ir({ proj: '' })} />}
     </>
   );
 }

@@ -14,6 +14,7 @@ const ordemCodigo = (a, b) => {
 import { CONFIG } from '../config';
 import { lerLancamentos, vincularUnidades } from './descontos';
 import { lerEntregas, vincularEntregas } from './entregas';
+import { lerProjecao, vincularProjecao } from './projecao';
 
 export function montarModelo(bruto) {
   const unidades = bruto.unidades.map((u) => ({ ...u, nome: CONFIG.nomesPadrao[u.aba] || u.nome, v: {} }));
@@ -48,6 +49,9 @@ export function montarModelo(bruto) {
     descontosErro: bruto.descontosErro || '',
     entregas: vincularEntregas(lerEntregas(bruto.entregasLinhas || []), ordenadas, CONFIG.vinculoEntregas),
     entregasErro: bruto.entregasErro || '',
+    projecao: vincularProjecao(lerProjecao(bruto.projecaoLinhas || []), ordenadas, { ...CONFIG.vinculoDescontos, ...CONFIG.vinculoProjecao }),
+    projecaoErro: bruto.projecaoErro || '',
+    projecaoLigada: Boolean((bruto.projecaoLinhas || []).length),
     atualizado: bruto.atualizado,
     unidades: ordenadas,
     porAba,

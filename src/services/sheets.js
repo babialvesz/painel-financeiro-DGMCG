@@ -51,10 +51,11 @@ export async function carregarProducao(token) {
 export async function carregar(token) {
   // as abas de descontos e de entregas não podem derrubar o painel inteiro se falharem
   const opcional = (nome) => lerAbaCrua(nome, token).then((linhas) => ({ linhas }), (e) => ({ erro: e.message }));
-  const [base, descontos, entregas] = await Promise.all([
+  const [base, descontos, entregas, projecao] = await Promise.all([
     lerAbaCrua(CONFIG.abas.base, token),
     opcional(CONFIG.abas.descontos),
     opcional(CONFIG.abas.entregas),
+    opcional(CONFIG.abas.projecao),
   ]);
   return {
     ...lerBase(base),
@@ -62,5 +63,7 @@ export async function carregar(token) {
     descontosErro: descontos.erro || '',
     entregasLinhas: entregas.linhas || [],
     entregasErro: entregas.erro || '',
+    projecaoLinhas: projecao.linhas || [],
+    projecaoErro: projecao.erro || '',
   };
 }

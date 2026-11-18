@@ -12,6 +12,7 @@ import VisaoGeral from './telas/VisaoGeral';
 import Unidades from './telas/Unidades';
 import Unidade from './telas/Unidade';
 import DespesasPorItem from './telas/DespesasPorItem';
+import Projecao from './telas/Projecao';
 import Descontos from './telas/Descontos';
 import Entregas from './telas/Entregas';
 import EntregaUnidade from './telas/EntregaUnidade';
@@ -31,6 +32,7 @@ const MENUS = {
     { id: 'itens', href: '#/itens', nome: 'Despesas por item', icone: 'itens', tambem: ['item'] },
     { id: 'descontos', href: '#/descontos', nome: 'Descontos', icone: 'desconto' },
     { id: 'entregas', href: '#/entregas', nome: 'Entregas', icone: 'calendario', tambem: ['entrega'] },
+    { id: 'projecao', href: '#/projecao', nome: 'Projeção', icone: 'projecao' },
     { id: 'apresentacao', href: '#/apresentacao', nome: 'Apresentar', icone: 'apresentacao' },
   ],
   producao: [
@@ -52,6 +54,7 @@ function TelaFinanceiro({ rota }) {
     case 'descontos': return <Descontos query={rota.query} />;
     case 'entregas': return <Entregas query={rota.query} />;
     case 'entrega': return <EntregaUnidade id={param} />;
+    case 'projecao': return <Projecao query={rota.query} />;
     default: return <VisaoGeral />;
   }
 }

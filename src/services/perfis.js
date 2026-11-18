@@ -51,7 +51,7 @@ export async function areasDoUsuario(email, token) {
 /**
  * Aba Vínculos da planilha de configuração: tipo | como aparece na fonte | aba no painel | observação.
  * Tipos: Entregas (sigla da aba DATAS DE ENTREGA), Descontos (código da unidade), Produção (nome na
- * planilha de produção) e Nome exibido (nome que o painel mostra para a aba).
+ * planilha de produção), Projeção (código da unidade na projeção) e Nome exibido (nome que o painel mostra para a aba).
  */
 export function aplicarVinculos(linhas) {
   const k = (c) => norm(c).replace(/[^A-Z]/g, '');
@@ -67,5 +67,6 @@ export function aplicarVinculos(linhas) {
     else if (tipo === 'DESCONTOS') CONFIG.vinculoDescontos[fonte] = aba;
     else if (tipo === 'PRODUCAO') CONFIG.vinculoProducao[aba] = fonte;
     else if (tipo === 'NOMEEXIBIDO') CONFIG.nomesPadrao[aba] = fonte;
+    else if (tipo === 'PROJECAO') CONFIG.vinculoProjecao[fonte] = aba;
   });
 }

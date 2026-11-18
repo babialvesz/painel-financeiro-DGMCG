@@ -15,7 +15,7 @@ export function aplicarTemaGraficos() {
   Chart.defaults.plugins.tooltip.padding = 10;
 }
 
-export default function GraficoMensal({ meses, series, altura = 250, corPorSinal = false, formato = brl, eixo = curto, empilhado = false }) {
+export default function GraficoMensal({ meses, series, altura = 250, corPorSinal = false, formato = brl, eixo = curto, empilhado = false, onClick, rotulo }) {
   aplicarTemaGraficos();
   const data = {
     labels: meses.map(rotuloMes),
@@ -30,6 +30,8 @@ export default function GraficoMensal({ meses, series, altura = 250, corPorSinal
   };
   const options = {
     maintainAspectRatio: false,
+    onClick: onClick ? () => onClick() : undefined,
+    onHover: onClick ? (e) => { e.native.target.style.cursor = 'pointer'; } : undefined,
     interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: series.length > 1, position: 'top', align: 'end', labels: { boxWidth: 10, boxHeight: 10, useBorderRadius: true, borderRadius: 3 } },
@@ -40,5 +42,5 @@ export default function GraficoMensal({ meses, series, altura = 250, corPorSinal
       y: { ticks: { callback: (v) => eixo(v) }, stacked: empilhado, beginAtZero: true },
     },
   };
-  return <div className="grafico" style={{ height: altura }}><Bar data={data} options={options} /></div>;
+  return <div className="grafico" style={{ height: altura }}><Bar data={data} options={options} aria-label={rotulo} role={rotulo ? 'img' : undefined} /></div>;
 }

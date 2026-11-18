@@ -11,7 +11,11 @@ export const CONFIG = {
     descontos: 'DESCONTOS_DEVOLUÇÃO_COMPENSAÇÃO',
     // cronograma de entrega das prestações de contas (PCF), também lido direto
     entregas: 'DATAS DE ENTREGA',
+    // projeção de repasses (aba Consolidado da planilha "Projeção + Fluxo de pagamento OSS", trazida por IMPORTRANGE)
+    projecao: 'PROJECAO',
   },
+  // ano das competências da projeção quando o rótulo não traz o ano ("Competência Janeiro")
+  anoProjecao: 2026,
   // Prazo de entrega da PCF: dia 25 do mês seguinte à competência.
   // Se cair em fim de semana ou feriado, vale o próximo dia útil.
   entregas: {
@@ -78,6 +82,10 @@ export const CONFIG = {
   // O ideal é corrigir também na planilha; aqui garante o padrão no painel.
   // Descontos: liga o código da unidade na aba de descontos a uma aba do painel,
   // quando o nome não bate automaticamente. Ex.: '3204': 'HMAAGRESTE - CG 001/2025'
+  // Unidade da projeção (código da ficha) → aba no painel. Também valem os códigos de vinculoDescontos.
+  vinculoProjecao: {
+    '1301': 'HRRBC - CG 001/2016', // Hospital Rui de Barros Correia (contrato 1222/2018), não o emergencial de 2026
+  },
   vinculoDescontos: {
     '2923': 'CMP - CG 001/2024', // Implantação do Programa Carretas da Saúde = Carretas da Mulher Pernambucana
     '3204': 'HMAAGRESTE - CG 001/2025', // Hospital da Mulher - Caruaru = Hospital da Mulher do Agreste

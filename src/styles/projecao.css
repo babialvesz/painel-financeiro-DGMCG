@@ -1,0 +1,85 @@
+/* Projeção de repasses: aba própria e painel lateral da unidade (usa os tokens de .dpi) */
+.dpi .aviso-proj { background: var(--ambar-suave); color: var(--texto); border: 1px solid var(--ambar); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.dpi .aviso-proj small { color: var(--texto2); font-size: .875rem; }
+.dpi .aviso-proj p { margin: 0; }
+
+.dpi .cartoes-proj { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 4px 0 18px; }
+.dpi .cartoes-proj > div { background: var(--card2); border: 1px solid var(--borda); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dpi .cartoes-proj.grandes > div { background: var(--card); padding: 16px 18px; }
+.dpi .cartoes-proj span { color: var(--texto2); font-weight: 600; font-size: .875rem; }
+.dpi .cartoes-proj b { font-size: 1.2rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.dpi .cartoes-proj.grandes b { font-size: 1.45rem; }
+.dpi .cartoes-proj small { color: var(--texto2); font-size: .875rem; }
+.dpi .cartoes-proj .neg b { color: var(--alerta-texto); }
+.dpi .cartoes-proj .pos b { color: var(--ok-texto); }
+
+.dpi .tabela-parcelas { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .95rem; }
+.dpi .tabela-parcelas th, .dpi .tabela-parcelas td { padding: 10px 12px; border-bottom: 1px solid var(--borda); text-align: left; vertical-align: top; color: var(--texto); }
+.dpi .tabela-parcelas thead th { background: var(--card2); font-size: .875rem; color: var(--texto2); font-weight: 700; white-space: nowrap; }
+.dpi .tabela-parcelas tbody th { font-weight: 650; white-space: nowrap; }
+.dpi .tabela-parcelas small { display: block; color: var(--texto2); font-size: .875rem; }
+.dpi .tabela-parcelas .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dpi .tabela-parcelas .neg { color: var(--alerta-texto); font-weight: 700; }
+.dpi .tabela-parcelas .ob { font-size: .875rem; overflow-wrap: anywhere; min-width: 140px; }
+.dpi .tabela-parcelas .muted { color: var(--texto2); font-size: .875rem; }
+.dpi .tabela-parcelas.semanas td, .dpi .tabela-parcelas.semanas th { text-align: center; }
+.dpi .tabela-parcelas.semanas tbody th { text-align: left; }
+.dpi .tabela-parcelas td.pct b { display: block; font-size: 1rem; }
+.dpi .tabela-parcelas td.tudo { background: var(--ok-suave); }
+.dpi .tabela-parcelas td.tudo b { color: var(--ok-texto); }
+.dpi .tabela-parcelas td.parte { background: var(--ambar-suave); }
+.dpi .tabela-parcelas td.parte b { color: var(--ambar-texto); }
+.dpi .tabela-parcelas td.nada { background: var(--card2); }
+.dpi .tabela-parcelas td.vazia { color: var(--texto2); }
+
+.dpi .selo-parcela { display: inline-flex; align-items: center; gap: 4px; border-radius: 8px; padding: 2px 9px; font-size: .875rem; font-weight: 700; white-space: nowrap; }
+.dpi .selo-parcela.paga { background: var(--ok-suave); color: var(--ok-texto); }
+.dpi .selo-parcela.apagar { background: var(--card2); color: var(--texto2); border: 1px solid var(--borda-campo); }
+.dpi .selo-parcela.risco { background: var(--alerta-suave); color: var(--alerta-texto); }
+.dpi .selo-parcela.pendente { background: var(--ambar-suave); color: var(--ambar-texto); }
+
+.dpi .mes-proj { border: 1px solid var(--borda); border-radius: 14px; margin-bottom: 8px; background: var(--card); }
+.dpi .mes-proj summary { cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; min-height: 48px; font-weight: 700; list-style: none; }
+.dpi .mes-proj summary::after { content: "▾"; color: var(--acento); }
+.dpi .mes-proj[open] summary::after { content: "▴"; }
+.dpi .mes-proj summary .resumo-mes { margin-left: auto; font-weight: 500; color: var(--texto2); font-size: .875rem; }
+.dpi .mes-proj summary .resumo-mes b { color: var(--texto); }
+.dpi .mes-proj .matriz-wrap { margin: 0 12px 12px; }
+
+.dpi .lista-proj { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dpi .lista-proj > li { border: 1.5px solid transparent; border-radius: 16px; padding: 12px 14px; }
+.dpi .lista-proj > li:hover, .dpi .lista-proj > li.aberta { border-color: var(--borda); background: var(--card2); }
+.dpi .linha-proj { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) auto; gap: 10px 18px; align-items: center; }
+.dpi .linha-proj .nome b { display: block; }
+.dpi .linha-proj small { display: block; color: var(--texto2); font-size: .875rem; }
+.dpi .linha-proj .valores { text-align: right; }
+.dpi .linha-proj .valores b { font-variant-numeric: tabular-nums; }
+.dpi .linha-proj .acoes { display: flex; gap: 8px; flex-wrap: wrap; }
+.dpi .linha-proj .acoes a.bt-detalhar { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+.dpi .barra-pago { height: 14px; border-radius: 999px; background: var(--trilho); overflow: hidden; }
+.dpi .barra-pago span { display: block; height: 100%; background: var(--ok-texto); border-radius: 999px; }
+
+/* painel lateral */
+.gaveta.gaveta-projecao { width: min(900px, 100%); background: var(--card); }
+.gaveta-projecao .gaveta-topo .frase { margin-top: 6px; font-size: .95rem; }
+.gaveta-projecao .gaveta-sobre { font-size: .875rem; text-transform: none; letter-spacing: 0; font-weight: 700; color: var(--texto2); }
+.gaveta-projecao h2 { font-size: 1.35rem; }
+.gaveta-projecao h3 { font-size: 1.05rem !important; color: var(--texto) !important; margin: 22px 0 10px !important; }
+.gaveta-projecao .bt-fechar { flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--borda-campo); background: var(--card); color: var(--texto); display: flex; align-items: center; justify-content: center; }
+.gaveta-projecao .bt-ir-proj { margin-top: 20px; width: 100%; text-decoration: none; }
+.gaveta-projecao .cartoes-proj { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* botão no gráfico da unidade */
+.bt-projecao { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--acento); background: var(--card); color: var(--acento); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.bt-projecao:hover { background: var(--acento); color: var(--card); }
+.bt-projecao:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+.dica-grafico { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13.5px; color: var(--texto-2); }
+
+@media (max-width: 900px) {
+  .dpi .cartoes-proj { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dpi .linha-proj { grid-template-columns: minmax(0, 1fr); }
+  .dpi .linha-proj .valores { text-align: left; }
+}
+@media (max-width: 520px) {
+  .dpi .cartoes-proj, .gaveta-projecao .cartoes-proj { grid-template-columns: minmax(0, 1fr); }
+}
