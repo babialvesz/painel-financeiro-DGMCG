@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Responsivo: números grandes que cabem no card em qualquer tela.
+   Cada card de valor vira um "container"; o tamanho da fonte acompanha a
+   largura do card (cqi = 1% da largura do card), com mínimo e máximo.
+   Se o navegador não tiver container queries, o valor quebra linha em vez de vazar.
+   Carregado por último (main.jsx), depois dos estilos de cada tela.
+   ========================================================================== */
+
+.stat, .destaque, .cartao-valores > div, .mini-kpis > div, .faixa-resumo > div,
+.cartoes-proj > div, .cartao-deducao, .grade-oss > *, .cartao-unidade, .cartao-prod {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+/* valores */
+.stat-valor { font-size: clamp(17px, 10.5cqi, 28px); overflow-wrap: anywhere; }
+.grade-stats-unidade .stat-valor { font-size: clamp(17px, 10.5cqi, 26px); }
+.apres .stat-valor { white-space: normal; font-size: clamp(17px, 10.5cqi, 26px); }
+.stat-texto { font-size: clamp(14px, 7cqi, 17px); }
+.destaque-valor { font-size: clamp(15px, 10cqi, 22px); overflow-wrap: anywhere; }
+.cartao-valores dd { font-size: clamp(11px, 9.5cqi, 13px); overflow-wrap: anywhere; }
+.cartao-resultado { font-size: clamp(15px, 7cqi, 20px); overflow-wrap: anywhere; }
+.mini-kpis strong { font-size: clamp(13px, 10cqi, 17px); overflow-wrap: anywhere; }
+.mini-kpis strong.pequeno { font-size: clamp(11px, 8cqi, 13px); }
+.faixa-resumo b { font-size: clamp(17px, 14cqi, 26px); overflow-wrap: anywhere; }
+.dpi .cartoes-proj b { font-size: clamp(.95rem, 10cqi, 1.2rem); }
+.dpi .cartoes-proj.grandes b { font-size: clamp(1rem, 10cqi, 1.45rem); }
+.cartao-deducao { overflow-wrap: anywhere; }
+.heroi h1 b { font-size: clamp(28px, 7vw, 40px); overflow-wrap: anywhere; }
+.anel-centro strong { font-size: clamp(16px, 5vw, 24px); }
+.saz-total b { font-size: clamp(19px, 5vw, 24px); }
+
+/* rótulos e linhas de referência dos cards: quebram em vez de vazar */
+.stat-rotulo { flex-wrap: wrap; min-width: 0; }
+.stat-linhas > span { flex-wrap: wrap; column-gap: 8px; row-gap: 0; min-width: 0; }
+.stat-linhas > span > span:first-child { min-width: 0; }
+.stat-linhas b { margin-left: auto; text-align: right; overflow-wrap: anywhere; }
+.cartao-valores dt, .mini-kpis span { overflow-wrap: anywhere; }
+
+/* textos longos (nomes de unidade, títulos) nunca empurram a página */
+.titulo-pagina, .titulo-pagina > div, .card-topo > div, .card h2 { min-width: 0; }
+.titulo-pagina h1, .card h2, .gaveta h2 { overflow-wrap: anywhere; }
+.grade-2 > *, .grade-topo > *, .grade-principal > *, .grade-identificacao > *, .grade-stats-unidade > * { min-width: 0; }
+img, svg, canvas { max-width: 100%; }
+
+/* grades de cards de valores */
+@media (max-width: 1100px) {
+  .grade-stats-unidade.cinco { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .grade-stats-unidade.cinco { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cartao-valores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .grade-stats-unidade.cinco, .grade-stats-unidade.tres { grid-template-columns: 1fr; }
+  .stat-valor, .grade-stats-unidade .stat-valor { font-size: clamp(20px, 9cqi, 26px); }
+  .faixa-resumo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .faixa-resumo > div { border-left: none; border-top: 1px solid var(--borda); }
+  .faixa-resumo > div:nth-child(2n) { border-left: 1px solid var(--borda); }
+  .faixa-resumo > div:nth-child(-n+2) { border-top: none; }
+  .card { padding: 16px; }
+}
+@media (max-width: 380px) {
+  .cartao-valores { grid-template-columns: 1fr; }
+}
+
+/* balão de ajuda: só aparece aberto (o componente posiciona dentro da tela) */
+.ajuda-balao { visibility: visible; opacity: 1; max-width: calc(100vw - 24px); }
